@@ -1,18 +1,22 @@
 <template>
   <div id="app">
     <img src="./assets/logo.png" />
-    <HelloWorld />
+    <!-- <HelloWorld /> -->
     <div class="container">
       <div id="preview">
-        <div id="celestial-map"></div>
+        <div id="celestial-map" ref="wrapper" ></div>
+        <input type="button" value="Get image" @click="loadSVG">
       </div>
+      <img :src="image" class="preview-img">
       <div id="control-panel">
+        <!--
         <vue-google-autocomplete
           id="map"
           class="form-control"
           placeholder="Start typing"
           v-on:placechanged="getAddressData"
         ></vue-google-autocomplete>
+        -->
         <form></form>
       </div>
     </div>
@@ -36,21 +40,22 @@ export default {
 
   data: function () {
     return {
-      address: ''
+      address: '',
+      image: ''
     }
   },
 
   mounted () {
     // D3-Celestial Properties different from default
     const config = {
-      // width: 720,
+      width: 3000,
       location: false,
       interactive: false,
       controls: false,
       projection: 'airy',
       transform: 'equatorial',
       center: [-150, 0],
-      background: { fill: '#000', stroke: '#000', opacity: 1, width: 1 },
+      background: { fill: 'transparent', stroke: 'rgba(255,255,255,.6)', opacity: 1, width: 1 },
       datapath: 'https://ofrohn.github.io/data/',
       container: 'celestial-map',
       geopos: null,
@@ -61,14 +66,14 @@ export default {
         colors: false,
         names: false,
         style: { fill: '#fff', opacity: 1 },
-        limit: 6,
-        size: 7
+        limit: 50,
+        size: 15
       },
       constellations: {
         show: true,
         namestyle: {
           fill: '#aaa',
-          font: '12px Helvetica, Arial, sans-serif',
+          font: '0 Helvetica, Arial, sans-serif',
           align: 'center',
           baseline: 'middle',
           opacity: 0.9
@@ -87,23 +92,23 @@ export default {
     }
 
     // Asterism style properties
-    var cfgAst = {
-      p1: { stroke: '#f33', width: 3 },
-      p2: { stroke: '#f00', width: 2.5 },
-      p3: { stroke: '#e70000', width: 2 },
-      p4: { stroke: '#e00', width: 2 },
-      p5: { stroke: '#d70000', width: 2 },
-      p6: { stroke: '#f00', width: 2, dash: [2, 4] },
-      text: {
-        fill: '#f00',
-        font: 'bold 13px Helvetica, Arial, sans-serif',
-        align: 'center',
-        baseline: 'middle'
-      }
-    }
+    // var cfgAst = {
+    //   p1: { stroke: '#f33', width: 3 },
+    //   p2: { stroke: '#f00', width: 2.5 },
+    //   p3: { stroke: '#e70000', width: 2 },
+    //   p4: { stroke: '#e00', width: 2 },
+    //   p5: { stroke: '#d70000', width: 2 },
+    //   p6: { stroke: '#f00', width: 2, dash: [2, 4] },
+    //   text: {
+    //     fill: '#f00',
+    //     font: 'bold 13px Helvetica, Arial, sans-serif',
+    //     align: 'center',
+    //     baseline: 'middle'
+    //   }
+    // }
 
     // let scale, baseScale
-    var level = [1, 2, 6]
+    // var level = [1, 2, 6]
     // var baseScale
     let baseScale
     let scale
@@ -122,6 +127,8 @@ export default {
           .data(ast.features)
           .enter()
           .append('path')
+          .replace('image/png', 'image/octet-stream')
+        download.setAttribute('href', image)
           .attr('class', 'ast')
         Celestial.redraw()
       },
@@ -151,12 +158,19 @@ export default {
     })
 
     window.Celestial.display(config)
+    let canvasDiv = this.$refs.wrapper.children[0]
+    canvasDiv.id = 'canvas'
   },
 
   methods: {
     getAddressData: function (addressData, placeResultData, id) {
       this.address = addressData
       console.log(this.address)
+    },
+    loadSVG: function () {
+      console.log(window.Celestial.container.selectAll())
+      var image = window.Celestial.context.canvas.toDataURL('image/png')
+      this.image = image
     }
   }
 }
@@ -169,6 +183,14 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  background-color: #333;
   margin-top: 60px;
+}
+
+.preview-img {
+  width: 750px
+}
+#celestial-map {
+  display: none;
 }
 </style>
