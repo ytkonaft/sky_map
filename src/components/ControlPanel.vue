@@ -8,30 +8,29 @@
     <div class="product-page_variants">
       <div class="product-page_variants_block other">
         <div class="name design">Выберите дизайн</div>
-
         <div class="input_wrap">
           <label title="Blue ocean">
-            <input type="radio" name="color" value="698879">
+            <input type="radio" name="color" value="698879" v-model="design">
             <span><img src="https://www.pichshop.ru/upload/resize_cache/iblock/723/48_48_1/72309c4e74f2e7b8b4bf43a5df0276d0.jpg" alt=""></span>
           </label>
           <label title="Clear white">
-            <input type="radio" name="color" value="699304">
+            <input type="radio" name="color" value="699304" v-model="design">
             <span><img src="https://www.pichshop.ru/upload/resize_cache/iblock/eae/48_48_1/eae40136a8405b518cf4f4c10e5926ad.jpg" alt=""></span>
           </label>
           <label title="Rose galaxy">
-              <input type="radio" name="color" value="699305" checked="">
+              <input type="radio" name="color" value="699305" checked="" v-model="design">
               <span><img src="https://www.pichshop.ru/upload/resize_cache/iblock/f18/48_48_1/f1828454e76ba46cac8d46d83ba8536c.jpg" alt=""></span>
           </label>
           <label title="Black&amp;white">
-              <input type="radio" name="color" value="699308">
+              <input type="radio" name="color" value="699308" v-model="design">
               <span><img src="https://www.pichshop.ru/upload/resize_cache/iblock/5b7/48_48_1/5b7bdceff4286fa516d75d12b6dc9c00.jpg" alt=""></span>
           </label>
           <label title="Navy blue">
-              <input type="radio" name="color" value="699307">
+              <input type="radio" name="color" value="699307" v-model="design">
               <span><img src="https://www.pichshop.ru/upload/resize_cache/iblock/065/48_48_1/065b8e65dbe238652028a94193d13174.jpg" alt=""></span>
           </label>
           <label title="Black">
-              <input type="radio" name="color" value="698878">
+              <input type="radio" name="color" value="698878" v-model="design">
               <span><img src="https://www.pichshop.ru/upload/resize_cache/iblock/bbe/48_48_1/bbed694a5050a87c96215ba31c9b0f78.jpg" alt=""></span>
           </label>
         </div>
@@ -56,7 +55,7 @@
     <div class="product-page_variants">
       <div class="product-page_variants_block other">
         <div class="name" style="margin-bottom: 15px;">Выберите размер</div>
-        <select name="size" class="js-param chosen-select nosearch">
+        <select name="size" v-model="size">
           <option value="698881">А3 (42 х 29,7 см) - 990 рублей</option>
           <option value="698880">A2 (59,5 х 42 см) - 1490 рублей</option>
           <option value="714217">А3 с черной рамкой - 1990 рублей</option>
@@ -71,85 +70,12 @@
       <div class="product-page_variants">
         <div class="product-page_variants_block other">
           <div class="name">Выберите дату события</div>
-          
-          <datepicker :value="date" :language="ru" @selected="setDate"></datepicker>
-          <!-- <div class="input-group">
-            <input
-              id="day"
-              size="1"
-              type="text"
-              pattern="[0-9]*"
-              inputmode="numeric"
-              placeholder="3"
-              class="right-aligned autoselect"
-              required
-              min="1"
-              max="31"
-              step="1"
-              value="1"
-            />
-            <select id="month" size="1" class="size-3">
-              <option value="January">Январь</option>
-              <option value="February">Февраль</option>
-              <option value="March">Март</option>
-              <option value="April">Апрель</option>
-              <option value="May">Май</option>
-              <option value="June">Июнь</option>
-              <option value="July">Июль</option>
-              <option value="August">Август</option>
-              <option value="September">Сентябрь</option>
-              <option value="October">Октябрь</option>
-              <option value="November">Ноябрь</option>
-              <option value="December">Декабрь</option>
-            </select>
-            <input
-              id="year"
-              pattern="[0-9]*"
-              inputmode="numeric"
-              size="1"
-              type="text"
-              placeholder="2019"
-              class="size-2 autoselect"
-              required
-              min="1900"
-              max="2100"
-              step="1"
-              value="2019"
-            />
-          </div>
 
-          <div class="name">Выберите время</div>
-          <div class="input-group">
-            <input
-              id="hour"
-              size="1"
-              type="text"
-              pattern="[0-9]*"
-              inputmode="numeric"
-              placeholder="10"
-              class="right-aligned autoselect"
-              required
-              min="0"
-              max="23"
-              step="1"
-              value="0"
-            />
-            <div class="spacer">:</div>
-            <input
-              id="minute"
-              size="1"
-              type="text"
-              pattern="[0-9]*"
-              inputmode="numeric"
-              placeholder="50"
-              class="right-aligned autoselect"
-              required
-              min="0"
-              max="59"
-              step="1"
-              value="0"
-            />
-          </div> -->
+          <div id="celestial-form">
+            <input type="text" title="datetime-hide" id="datetime1" value="2019-09-05 08:51:49 +0300" ref="datetime">
+          </div>
+          
+          <!-- <datepicker :value="date" :language="ru" @selected="setDate"></datepicker> -->  
         </div>
       </div>
     </div>
@@ -166,6 +92,7 @@
                 </div>
                 <div class="art-field-value">
                   <input
+                    v-model="text1"
                     id="pers_input1"
                     maxlength="40"
                     class="art-order-field"
@@ -184,6 +111,7 @@
                 </div>
                 <div class="art-field-value">
                   <input
+                    v-model="text2"
                     id="pers_input2"
                     maxlength="45"
                     class="art-order-field"
@@ -202,6 +130,7 @@
                 </div>
                 <div class="art-field-value">
                   <input
+                    v-model="text3"
                     id="pers_input3"
                     maxlength="20"
                     class="art-order-field"
@@ -229,7 +158,7 @@
         <p>В корзину</p>
       </button>
     </div>
-    
+
     <div style="display:none;">
       <div class="col" id="location" style="display: inline-block;">
         <label title="Location coordinates long/lat" for="lat">Location</label>
@@ -414,24 +343,25 @@
   </div>
 </template>
 <script>
-import Autocomplete from 'vuejs-auto-complete'
-import Datepicker from 'vuejs-datepicker'
-import {ru} from 'vuejs-datepicker/dist/locale'
 import axios from 'axios'
 
 export default {
   name: 'ControlPanel',
   components: {
-    Autocomplete,
-    Datepicker
   },
 
   data: function () {
     return {
       address: '',
+      place_name: '',
+      size: 698881,
+      design: '',
       config: '',
       ru: ru,
-      date: ''
+      date: '',
+      text1: '',
+      text2: '',
+      text3: ''
     }
   },
   
@@ -447,7 +377,8 @@ export default {
       return result.place_name
     },
     addDistributionGroup (group) {
-      console.log(group.selectedObject.center)
+      console.log(group.selectedObject)
+      this.place_name = group.selectedObject.place_name
       this.address = group.selectedObject.center
       this.$emit('updateLocation', [this.address[0], this.address[1]])
     },
@@ -456,11 +387,20 @@ export default {
       console.log(this.address)
     },
     setDate: function (date) {
+      this.date = date
       this.$emit('updateDate', date)
     },
     sendData () {
       console.log('sending axios')
-      let str = {aa: 'bbbb'}
+      let str = {
+        design: this.design,
+        place_name: this.place_name,
+        date: this.$refs.datetime.value,
+        size: this.size,
+        text1: this.text1,
+        text2: this.text2,
+        text3: this.text3
+      }
       axios.post(`http://starsky.loc/api/starmap`, str)
         .then((response) => {
           console.log(response)
@@ -475,6 +415,7 @@ export default {
 <style>
 #control-panel {
   text-align: left;
+  width: 45%;
 }
 .product-page_title {
     font-weight: bold;
@@ -504,20 +445,21 @@ export default {
     content: '';
     height: 1px;
 }
-.product-page_variants label:first-child {
-    margin-left: 0;
+.product-page_variants label {
+    margin-right: 15px !important;
+}
+.product-page_variants label {
+    text-align: center;
 }
 .product-page_variants label {
     float: left;
     margin: 15px 20px 0 0;
     cursor: pointer;
 }
-.product-page_variants label {
-    text-align: center;
+.product-page_variants label:first-child {
+    margin-left: 0;
 }
-.product-page_variants label {
-    margin-right: 15px !important;
-}
+
 .product-page_variants label input {
     display: none;
 }
@@ -643,4 +585,113 @@ export default {
   border-color: #cccccc;
   color: #cccccc;
 }
+
+.autocomplete__inputs input {
+  height: 24px;
+}
+
+/* Form */
+
+#celestial-form input#lat, label[for="lat"], input#lon,
+#celestial-form input + span,
+input#here, input#day-left, input#day-right, input#now,
+label[for="datetime"], label[for="horizon-show"], input#horizon-show,
+label[for="planets-show"], input#planets-show,
+input[title="datetime-hide"] {
+  display: none !important;
+}
+
+#error { position:absolute; min-width:100px; height:auto; padding: 2px 4px; color:#f00; background:#fff; border:2px solid #f00; 
+border-radius:3px; font-weight:normal; display:block; top:-9999px; left:-9999px; opacity:0; transition:opacity 1s linear; }
+
+/* What parts to show */
+#celestial-form #general,
+#celestial-form #location,
+#celestial-form #stars,
+#celestial-form #dsos,
+#celestial-form #constellations,
+#celestial-form #lines,
+#celestial-form #other { display: block }
+
+#celestial-form input { vertical-align: 0px; }
+#celestial-form input[type='number'] { width:48px; height:18px; text-align:right; padding:0; }
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button { height: auto; }
+#celestial-form #centerx, #celestial-form #centery, #celestial-form #centerz,
+#celestial-form #lat, #celestial-form #lon { width:64px; margin-top:4px; }
+#celestial-form input[type='text'] { width:194px; height:18px; text-align:left; padding-left:2px; }
+#celestial-form input[type='checkbox'] { vertical-align: -2px; }
+#celestial-form input[type='color'] { width:48px; vertical-align: -3px; height:22px;  background:#fff; }
+#celestial-form #datepick {
+  position:relative;
+  display:inline-block;
+  top:7px;
+  left:-31px; 
+  width:28px; 
+  height:24px;
+  border:0px none;
+  border-left:1px solid #ccc;
+  background-color: #f7f7f7; 
+  background-image: url('../assets/dtpick.png');
+  background-position: -45px 1px;
+  cursor:default;
+}
+#celestial-form #datepick.active { background-position: -69px 1px; }
+#celestial-form #datetime { cursor:default; } 
+#celestial-form input#now { position:relative; left:-24px; }
+#celestial-form #constellation { } 
+#celestial-form #constellation option { color:#000; } 
+#celestial-form #constellation option[value=''] { color:#ccc; } 
+
+#celestial-form input[type='button'] { width:64px; padding-bottom:1px; margin-top:4px; float:right; background: #f7f7f7; }
+#celestial-form input#fullwidth { width:108px; }
+#celestial-form input#width { margin-left:2px; }
+#celestial-form input#now, 
+#celestial-form input#here  { width:48px; margin-left:2px; float:none; }
+#celestial-form input[type='button']:hover,
+#celestial-form #datepick:hover { background-color:#eee; }
+
+#celestial-form input[type='text']:disabled, 
+#celestial-form input[type='number']:disabled, 
+#celestial-form input[type='color']:disabled { border: 1px solid #ccc; background:#eee }
+
+#celestial-form input[type='text'], 
+#celestial-form input[type='number'], 
+#celestial-form input[type='color'], 
+#celestial-form select, 
+#celestial-form input#now, 
+#celestial-form input#here, 
+#celestial-form input#show, 
+#celestial-form input#fullwidth { border: 1px solid #000; border-radius:3px; height:24px; }
+
+#celestial-form label { margin:0 4px 0 8px; }
+#celestial-form label.header { font-weight:bold; }
+#celestial-form input + span { margin:0 4px 0 2px; }
+#celestial-form label:first-child, 
+#celestial-form br + label { margin-left:0; }
+
+#celestial-date { position:absolute; top:-9999px; width:193px; text-align:center; border:1px solid #000;
+background:#fff;
+/* opacity:0;
+transition:.6s ease-in opacity; */
+font: 13px/1 sans-serif; }
+#celestial-date input, #celestial-date select { font:inherit; }
+#celestial-date #yr, #celestial-date #mon { margin: 2px 3px; vertical-align:middle; }
+#celestial-date #left, #celestial-date #right { display:inline-block; width:12px; height:24px; margin:0; vertical-align:-8px; cursor:pointer;  background-image: url('../assets/dtpick.png'); }
+#celestial-form #day-left, #celestial-form #day-right { display:inline-block; float:none; width:12px; height:24px; margin:0; padding:0; vertical-align:middle; cursor:pointer; border: 0 none; background-color:transparent; background-image: url('../assets/dtpick.png'); }
+#celestial-form #day-right { position:relative; left:-30px; }
+#celestial-date #left, #celestial-form #day-left { background-position: -8px 0px; }
+#celestial-date #right, #celestial-form #day-right { background-position: -30px 0px; }
+#celestial-date #hr, #celestial-date #min, #celestial-date #sec { margin: 0 0 2px 0; width:34px; }
+#celestial-date #hr { border-right: 0px none; border-radius: 3px 0 0 3px;  }
+#celestial-date #min { border-right: 0px none; border-left: 0px none;  border-radius: 0; }
+#celestial-date #sec { border-left: 0px none;  border-radius: 0 3px 3px 0; }
+#celestial-date #tz { margin: 0 0 2px 4px; }
+#celestial-date #cal { display:inline-block; width:182px; margin:0 4px;  }
+#celestial-date .date { display:inline-block; width:19px; height:14px; border:1px solid #fff; color:#000; font-weight: bold; text-align:right; vertical-align:middle; padding:2px 4px 2px 0; cursor:pointer; }
+#celestial-date .grey { color:#ccc; }
+#celestial-date .weekday { color:#666; font-size:11px; background:#eee; border:1px solid #eee; }
+#celestial-date .weekend { color:#f00; }
+#celestial-date .selected { border:1px solid #000; border-radius:3px; }
+#celestial-date .today { background:#ff0; }
 </style>

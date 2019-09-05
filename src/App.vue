@@ -3,7 +3,7 @@
     <div class="container">
       <div id="preview">
         <div id="celestial-map" ref="wrapper" ></div>
-        <input type="button" value="Get image" @click="loadSVG">
+        <!-- <input type="button" value="Get image" @click="loadSVG"> -->
         <img :src="image" class="preview-img">
       </div>
       <ControlPanel @updateLocation="check" @updateDate="updateOnDate" />
@@ -156,6 +156,11 @@ export default {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  max-width: 1140px;
+  position: relative;
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
 }
 #preview {
   background-color: #333;
