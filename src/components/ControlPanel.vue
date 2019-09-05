@@ -343,11 +343,15 @@
   </div>
 </template>
 <script>
+import Autocomplete from 'vuejs-auto-complete'
+// import Datepicker from 'vuejs-datepicker'
 import axios from 'axios'
 
 export default {
   name: 'ControlPanel',
   components: {
+    Autocomplete,
+    // Datepicker
   },
 
   data: function () {
@@ -355,9 +359,9 @@ export default {
       address: '',
       place_name: '',
       size: 698881,
+      image: '',
       design: '',
       config: '',
-      ru: ru,
       date: '',
       text1: '',
       text2: '',
@@ -390,18 +394,53 @@ export default {
       this.date = date
       this.$emit('updateDate', date)
     },
+    b64toBlob (b64Data, contentType, sliceSize) {
+      contentType = contentType || ''
+      sliceSize = sliceSize || 512
+
+      var byteCharacters = atob(b64Data)
+      var byteArrays = []
+
+      for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+          var slice = byteCharacters.slice(offset, offset + sliceSize)
+
+          var byteNumbers = new Array(slice.length)
+          for (var i = 0; i < slice.length; i++) {
+              byteNumbers[i] = slice.charCodeAt(i)
+          }
+
+          var byteArray = new Uint8Array(byteNumbers)
+
+          byteArrays.push(byteArray)
+      }
+
+      var blob = new Blob(byteArrays, {type: contentType});
+      return blob;
+    },
     sendData () {
       console.log('sending axios')
-      let str = {
-        design: this.design,
-        place_name: this.place_name,
-        date: this.$refs.datetime.value,
-        size: this.size,
-        text1: this.text1,
-        text2: this.text2,
-        text3: this.text3
-      }
-      axios.post(`http://starsky.loc/api/starmap`, str)
+      let ImageURL = window.Celestial.context.canvas.toDataURL('image/png')
+
+      let block = ImageURL.split(";")
+      let contentType = block[0].split(":")[1]
+      let realData = block[1].split(",")[1]
+
+      let blob = this.b64toBlob(realData, contentType);
+
+      let formData = new FormData()
+      formData.append('design', this.design)
+      formData.append('place_name', this.place_name)
+      formData.append('date', this.$refs.datetime.value),
+      formData.append('size', this.size)
+      formData.append('text1', this.text1)
+      formData.append('text2', this.text2)
+      formData.append('text3', this.text3)
+      formData.append('img', blob)
+      axios.post(`http://starsky.loc/api/starmap`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
         .then((response) => {
           console.log(response)
         })
@@ -643,6 +682,7 @@ input[type="number"]::-webkit-outer-spin-button { height: auto; }
 #celestial-form #constellation option { color:#000; } 
 #celestial-form #constellation option[value=''] { color:#ccc; } 
 
+#celestial-form .loc { width: 100%; }
 #celestial-form input[type='button'] { width:64px; padding-bottom:1px; margin-top:4px; float:right; background: #f7f7f7; }
 #celestial-form input#fullwidth { width:108px; }
 #celestial-form input#width { margin-left:2px; }
@@ -662,7 +702,7 @@ input[type="number"]::-webkit-outer-spin-button { height: auto; }
 #celestial-form input#now, 
 #celestial-form input#here, 
 #celestial-form input#show, 
-#celestial-form input#fullwidth { border: 1px solid #000; border-radius:3px; height:24px; }
+#celestial-form input#fullwidth { border: 1px solid #cccccc; border-radius:3px; height:24px; }
 
 #celestial-form label { margin:0 4px 0 8px; }
 #celestial-form label.header { font-weight:bold; }
