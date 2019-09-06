@@ -55,14 +55,7 @@
     <div class="product-page_variants">
       <div class="product-page_variants_block other">
         <div class="name" style="margin-bottom: 15px;">Выберите размер</div>
-        <select name="size" v-model="size">
-          <option value="698881">А3 (42 х 29,7 см) - 990 рублей</option>
-          <option value="698880">A2 (59,5 х 42 см) - 1490 рублей</option>
-          <option value="714217">А3 с черной рамкой - 1990 рублей</option>
-          <option value="714229">А3 с белой рамкой - 1990 рублей</option>
-          <option value="714218">A2 с черной рамкой - 2590 рублей</option>
-          <option value="714228">A2 с белой рамкой - 2590 рублей</option>
-        </select>
+        <v-select :options="options" label="label" :reduce="value => value.value" v-model="size"></v-select>
       </div>
     </div>
 
@@ -345,20 +338,49 @@
 <script>
 import Autocomplete from 'vuejs-auto-complete'
 // import Datepicker from 'vuejs-datepicker'
+import vSelect from 'vue-select'
+import 'vue-select/dist/vue-select.css';
 import axios from 'axios'
 
 export default {
   name: 'ControlPanel',
   components: {
     Autocomplete,
+    vSelect
     // Datepicker
   },
 
   data: function () {
     return {
+      options: [
+        {
+          label: 'А3 (42 х 29,7 см) - 990 рублей',
+          value: 698881
+        },
+        {
+          label: 'A2 (59,5 х 42 см) - 1490 рублей',
+          value: 898880
+        },
+        {
+          label: 'А3 с черной рамкой - 1990 рублей',
+          value: 714217
+        },
+        {
+          label: 'А3 с белой рамкой - 1990 рублей',
+          value: 714229
+        },
+        {
+          label: 'A2 с черной рамкой - 2590 рублей',
+          value: 714218
+        },
+        {
+          label: 'A2 с белой рамкой - 2590 рублей',
+          value: 714228
+        }
+      ],
       address: '',
       place_name: '',
-      size: 698881,
+      size: '',
       image: '',
       design: '',
       config: '',
@@ -368,7 +390,9 @@ export default {
       text3: ''
     }
   },
-  
+  mounted() {
+    this.size = this.options[0].value
+  },
   methods: {
     endpoint (input) {
       return (
