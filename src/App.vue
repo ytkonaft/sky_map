@@ -125,13 +125,14 @@ export default {
         window.Celestial.apply(this.config)
       }
       var image = window.Celestial.context.canvas.toDataURL('image/png')
+      console.log(image)
       this.image = image
     }
   }
 }
 </script>
+<style lang="scss">
 
-<style>
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -177,4 +178,5 @@ export default {
   width: 100%
 }
 
+@import './assets/scss/media';
 </style>

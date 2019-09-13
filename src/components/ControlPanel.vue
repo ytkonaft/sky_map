@@ -152,195 +152,15 @@
       </button>
     </div>
 
-    <div style="display:none;">
-      <div class="col" id="location" style="display: inline-block;">
-        <label title="Location coordinates long/lat" for="lat">Location</label>
-        <input
-          type="number"
-          id="lat"
-          title="Latitude"
-          placeholder="Latitude"
-          max="90"
-          min="-90"
-          step="0.0001"
-          value="0"
-        />
-        <span>°</span>
-        <input
-          type="number"
-          id="lon"
-          title="Longitude"
-          placeholder="Longitude"
-          max="180"
-          min="-180"
-          step="0.0001"
-          value="0"
-        />
-        <span>°</span>
-        <input type="button" value="Here" id="here" />
-        <label title="Local date/time" for="datetime">Date/time</label>
-        <input type="button" id="day-left" title="One day back" />
-        <input type="text" id="datetime" title="Date and time" value="2019-09-04 09:44:06 +0300" />
-        <div id="datepick"></div>
-        <input type="button" id="day-right" title="One day forward" />
-        <input type="button" value="Now" id="now" />
-        <br />
-        <label
-          title="Show horizon marker"
-          for="horizon-show"
-          style="color: rgb(153, 153, 153);"
-        >Horizon marker</label>
-        <input type="checkbox" id="horizon-show" disabled />
-        <label title="Show solar system objects" for="planets-show">Planets, Sun &amp; Moon</label>
-        <input type="checkbox" id="planets-show" />
-      </div>
-    </div>
-    <div id="celestial-date" style="display:none">
-      <div id="left"></div>
-      <select title="Month" id="mon">
-        <option value="0">January</option>
-        <option value="1">February</option>
-        <option value="2">March</option>
-        <option value="3">April</option>
-        <option value="4">May</option>
-        <option value="5">June</option>
-        <option value="6">July</option>
-        <option value="7">August</option>
-        <option value="8">September</option>
-        <option value="9">October</option>
-        <option value="10">November</option>
-        <option value="11">December</option>
-      </select>
-      <select title="Year" id="yr">
-        <option>2009</option>
-        <option>2010</option>
-        <option>2011</option>
-        <option>2012</option>
-        <option>2013</option>
-        <option>2014</option>
-        <option>2015</option>
-        <option>2016</option>
-        <option>2017</option>
-        <option>2018</option>
-        <option>2019</option>
-        <option>2020</option>
-        <option>2021</option>
-        <option>2022</option>
-        <option>2023</option>
-        <option>2024</option>
-        <option>2025</option>
-        <option>2026</option>
-        <option>2027</option>
-        <option>2028</option>
-        <option>2029</option>
-      </select>
-      <div id="right"></div>
-      <div id="cal">
-        <div class="date weekday">Su</div>
-        <div class="date weekday">M</div>
-        <div class="date weekday">Tu</div>
-        <div class="date weekday">W</div>
-        <div class="date weekday">Th</div>
-        <div class="date weekday">F</div>
-        <div class="date weekday">Sa</div>
-        <div class="date weekend" id="2019-09-01">1</div>
-        <div class="date" id="2019-09-02">2</div>
-        <div class="date" id="2019-09-03">3</div>
-        <div class="date today selected" id="2019-09-04">4</div>
-        <div class="date" id="2019-09-05">5</div>
-        <div class="date" id="2019-09-06">6</div>
-        <div class="date weekend" id="2019-09-07">7</div>
-        <div class="date weekend" id="2019-09-08">8</div>
-        <div class="date" id="2019-09-09">9</div>
-        <div class="date" id="2019-09-10">10</div>
-        <div class="date" id="2019-09-11">11</div>
-        <div class="date" id="2019-09-12">12</div>
-        <div class="date" id="2019-09-13">13</div>
-        <div class="date weekend" id="2019-09-14">14</div>
-        <div class="date weekend" id="2019-09-15">15</div>
-        <div class="date" id="2019-09-16">16</div>
-        <div class="date" id="2019-09-17">17</div>
-        <div class="date" id="2019-09-18">18</div>
-        <div class="date" id="2019-09-19">19</div>
-        <div class="date" id="2019-09-20">20</div>
-        <div class="date weekend" id="2019-09-21">21</div>
-        <div class="date weekend" id="2019-09-22">22</div>
-        <div class="date" id="2019-09-23">23</div>
-        <div class="date" id="2019-09-24">24</div>
-        <div class="date" id="2019-09-25">25</div>
-        <div class="date" id="2019-09-26">26</div>
-        <div class="date" id="2019-09-27">27</div>
-        <div class="date weekend" id="2019-09-28">28</div>
-        <div class="date weekend" id="2019-09-29">29</div>
-        <div class="date" id="2019-09-30">30</div>
-        <div class="date grey" id="2019-10-01">1</div>
-        <div class="date grey" id="2019-10-02">2</div>
-        <div class="date grey" id="2019-10-03">3</div>
-        <div class="date grey" id="2019-10-04">4</div>
-        <div class="date grey" id="2019-10-05">5</div>
-        <div class="date grey" id="2019-10-06">6</div>
-        <div class="date grey" id="2019-10-07">7</div>
-        <div class="date grey" id="2019-10-08">8</div>
-        <div class="date grey" id="2019-10-09">9</div>
-        <div class="date grey" id="2019-10-10">10</div>
-        <div class="date grey" id="2019-10-11">11</div>
-        <div class="date grey" id="2019-10-12">12</div>
-      </div>
-      <input type="number" id="hr" title="Hours" max="24" min="-1" step="1" value="9" />
-      <input type="number" id="min" title="Minutes" max="60" min="-1" step="1" value="44" />
-      <input type="number" id="sec" title="Seconds" max="60" min="-1" step="1" value="6" />
-      <select title="Time zone offset from UTC" id="tz">
-        <option value="720">−12:00</option>
-        <option value="660">−11:00</option>
-        <option value="600">−10:00</option>
-        <option value="570">−09:30</option>
-        <option value="540">−09:00</option>
-        <option value="480">−08:00</option>
-        <option value="420">−07:00</option>
-        <option value="360">−06:00</option>
-        <option value="300">−05:00</option>
-        <option value="270">−04:30</option>
-        <option value="240">−04:00</option>
-        <option value="210">−03:30</option>
-        <option value="180">−03:00</option>
-        <option value="120">−02:00</option>
-        <option value="60">−01:00</option>
-        <option value="0">±00:00</option>
-        <option value="-60">+01:00</option>
-        <option value="-120">+02:00</option>
-        <option value="-180">+03:00</option>
-        <option value="-210">+03:30</option>
-        <option value="-240">+04:00</option>
-        <option value="-270">+04:30</option>
-        <option value="-300">+05:00</option>
-        <option value="-330">+05:30</option>
-        <option value="-345">+05:45</option>
-        <option value="-360">+06:00</option>
-        <option value="-390">+06:30</option>
-        <option value="-420">+07:00</option>
-        <option value="-480">+08:00</option>
-        <option value="-510">+08:30</option>
-        <option value="-525">+08:45</option>
-        <option value="-540">+09:00</option>
-        <option value="-570">+09:30</option>
-        <option value="-600">+10:00</option>
-        <option value="-630">+10:30</option>
-        <option value="-660">+11:00</option>
-        <option value="-720">+12:00</option>
-        <option value="-765">+12:45</option>
-        <option value="-780">+13:00</option>
-        <option value="-840">+14:00</option>
-      </select>
-    </div>
-
   </div>
 </template>
 <script>
 import Autocomplete from 'vuejs-auto-complete'
 // import Datepicker from 'vuejs-datepicker'
 import vSelect from 'vue-select'
-import 'vue-select/dist/vue-select.css';
-import axios from 'axios'
+import 'vue-select/dist/vue-select.css'
+//import axios from 'axios'
+import AjaxService from '../services/AjaxService'
 
 export default {
   name: 'ControlPanel',
@@ -398,7 +218,7 @@ export default {
       return (
         'https://api.mapbox.com/geocoding/v5/mapbox.places/' +
         input +
-        '.json?access_token=pk.eyJ1IjoibWFrc2ltOTg5IiwiYSI6ImNqeDY0OXZrbzA4Nnk0ZHF1bG9ybmxvNGsifQ.-OcDOS1w1vyn8poaNOtsDg'
+        '.json?types=place&access_token=pk.eyJ1IjoibWFrc2ltOTg5IiwiYSI6ImNqeDY0OXZrbzA4Nnk0ZHF1bG9ybmxvNGsifQ.-OcDOS1w1vyn8poaNOtsDg'
       )
     },
     formattedDisplay (result) {
@@ -460,11 +280,11 @@ export default {
       formData.append('text2', this.text2)
       formData.append('text3', this.text3)
       formData.append('img', blob)
-      axios.post(`http://starsky.loc/api/starmap`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      })
+
+      let headers = {
+        'Content-Type': 'multipart/form-data'
+      }
+      AjaxService.makePostRequest(`/starmap`, formData, headers)
         .then((response) => {
           console.log(response)
         })

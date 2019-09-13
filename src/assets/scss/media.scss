@@ -1,0 +1,11 @@
+@media screen and (max-width: 740px) {
+  .container {
+    flex-direction: column;
+  }
+  #preview, #control-panel {
+    width: 100% !important;
+  }
+  #preview {
+    max-width: 600px;
+  }
+}
