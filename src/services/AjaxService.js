@@ -2,8 +2,9 @@ import axios from 'axios'
 
 class AjaxService {
   constructor () {
-    this.siteUrl = process.env.VUE_APP_API_URL
-    this.apiVersion = 'api'
+    // this.siteUrl = process.env.VUE_APP_API_URL
+    this.siteUrl = process.env.VUE_GET_API
+    this.apiVersion = 'api/sky/'
   }
 
   getApiUrl () {

@@ -172,6 +172,7 @@ export default {
 
   data: function () {
     return {
+      apiOptions: null,
       options: [
         {
           label: 'А3 (42 х 29,7 см) - 990 рублей',
@@ -212,6 +213,15 @@ export default {
   },
   mounted() {
     this.size = this.options[0].value
+    AjaxService
+      .makeGetRequest(`get/`)
+      .then((response) => {
+        console.log(response)
+        this.apiOptions = response
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   },
   methods: {
     endpoint (input) {
