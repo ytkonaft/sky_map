@@ -9,29 +9,9 @@
       <div class="product-page_variants_block other">
         <div class="name design">Выберите дизайн</div>
         <div class="input_wrap">
-          <label title="Blue ocean">
-            <input type="radio" name="color" value="698879" v-model="design">
-            <span><img src="https://www.pichshop.ru/upload/resize_cache/iblock/723/48_48_1/72309c4e74f2e7b8b4bf43a5df0276d0.jpg" alt=""></span>
-          </label>
-          <label title="Clear white">
-            <input type="radio" name="color" value="699304" v-model="design">
-            <span><img src="https://www.pichshop.ru/upload/resize_cache/iblock/eae/48_48_1/eae40136a8405b518cf4f4c10e5926ad.jpg" alt=""></span>
-          </label>
-          <label title="Rose galaxy">
-              <input type="radio" name="color" value="699305" checked="" v-model="design">
-              <span><img src="https://www.pichshop.ru/upload/resize_cache/iblock/f18/48_48_1/f1828454e76ba46cac8d46d83ba8536c.jpg" alt=""></span>
-          </label>
-          <label title="Black&amp;white">
-              <input type="radio" name="color" value="699308" v-model="design">
-              <span><img src="https://www.pichshop.ru/upload/resize_cache/iblock/5b7/48_48_1/5b7bdceff4286fa516d75d12b6dc9c00.jpg" alt=""></span>
-          </label>
-          <label title="Navy blue">
-              <input type="radio" name="color" value="699307" v-model="design">
-              <span><img src="https://www.pichshop.ru/upload/resize_cache/iblock/065/48_48_1/065b8e65dbe238652028a94193d13174.jpg" alt=""></span>
-          </label>
-          <label title="Black">
-              <input type="radio" name="color" value="698878" v-model="design">
-              <span><img src="https://www.pichshop.ru/upload/resize_cache/iblock/bbe/48_48_1/bbed694a5050a87c96215ba31c9b0f78.jpg" alt=""></span>
+          <label v-for="style in styles" :key="style.id" title="Blue ocean">
+            <input type="radio" name="color" :value="style.id" v-model="design">
+            <span><img :src=style.picture alt=""></span>
           </label>
         </div>
 
@@ -143,7 +123,6 @@
     </div>
 
     <div class="artsk-info">Срок доставки данного товара больше на 3-4 рабочих дня.</div>
-
     <div>
       <button class="product-generate_btn" @click="sendData">Создать карту</button>
       <button class="js-btn_add product-page_in-cart_notactive">
@@ -159,8 +138,9 @@ import Autocomplete from 'vuejs-auto-complete'
 // import Datepicker from 'vuejs-datepicker'
 import vSelect from 'vue-select'
 import 'vue-select/dist/vue-select.css'
-//import axios from 'axios'
+import axios from 'axios'
 import AjaxService from '../services/AjaxService'
+import testData from '../assets/download'
 
 export default {
   name: 'ControlPanel',
@@ -172,38 +152,40 @@ export default {
 
   data: function () {
     return {
-      apiOptions: null,
-      options: [
-        {
-          label: 'А3 (42 х 29,7 см) - 990 рублей',
-          value: 698881
-        },
-        {
-          label: 'A2 (59,5 х 42 см) - 1490 рублей',
-          value: 898880
-        },
-        {
-          label: 'А3 с черной рамкой - 1990 рублей',
-          value: 714217
-        },
-        {
-          label: 'А3 с белой рамкой - 1990 рублей',
-          value: 714229
-        },
-        {
-          label: 'A2 с черной рамкой - 2590 рублей',
-          value: 714218
-        },
-        {
-          label: 'A2 с белой рамкой - 2590 рублей',
-          value: 714228
-        }
-      ],
+      // apiOptions: null,
+      options: [],
+      // options: [
+      //   {
+      //     label: 'А3 (42 х 29,7 см) - 990 рублей',
+      //     value: 698881
+      //   },
+      //   {
+      //     label: 'A2 (59,5 х 42 см) - 1490 рублей',
+      //     value: 898880
+      //   },
+      //   {
+      //     label: 'А3 с черной рамкой - 1990 рублей',
+      //     value: 714217
+      //   },
+      //   {
+      //     label: 'А3 с белой рамкой - 1990 рублей',
+      //     value: 714229
+      //   },
+      //   {
+      //     label: 'A2 с черной рамкой - 2590 рублей',
+      //     value: 714218
+      //   },
+      //   {
+      //     label: 'A2 с белой рамкой - 2590 рублей',
+      //     value: 714228
+      //   }
+      // ],
       address: '',
       place_name: '',
       size: '',
       image: '',
       design: '',
+      styles: null,
       config: '',
       date: '',
       text1: '',
@@ -212,18 +194,63 @@ export default {
     }
   },
   mounted() {
-    this.size = this.options[0].value
-    AjaxService
-      .makeGetRequest(`get/`)
-      .then((response) => {
-        console.log(response)
-        this.apiOptions = response
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+    // this.size = this.options[0].value
+    const apiOptions = testData.data
+    // console.log(apiOptions)
+    this.styles = apiOptions.styles
+    console.log(this.borders)
+    const newArr = apiOptions.prices.map(({size, border}) => {
+      console.log(border)
+      return `${this.sizes[size]['name']} + ${this.borders[border]['name']} рамка`
+      // console.log(element.border)
+      // let borders = apiOptions.borders
+      // let sizes = apiOptions.sizes
+      // console.log(borders.find(borders => borders.id === element.border).name)
+      // this.options.push({
+      //   label: `
+      //    ${sizes.find(sizes => sizes.id === element.size).name}
+      //    ${borders.find(borders => borders.id === element.border).name} рамка` + ' - ' + `${element.price}`,
+      //   value: element.id
+      // })
+    })
+    this.options = newArr
+    // axios
+      //.get('http://starsky.loc/api/aaa')
+      // .get('http://localhost:7777/download.json')
+      // .then((response) => {
+        // console.log(response.data)
+        // if (response.data.success === 'true') {
+      //   }
+      // })
+      // .catch((error) => {
+      //   console.log(error)
+      // })
+    // AjaxService
+    //   .makeGetRequest(`get/`)
+      // .then((response) => {
+      //   console.log(response)
+      //   this.apiOptions = response
+      // })
+      // .catch((error) => {
+      //   console.log(error)
+      // })
+  },
+  computed:{
+    borders(){
+      return this.getParamsById(testData.data.borders)
+    },
+    sizes(){
+      return this.getParamsById(testData.data.sizes)
+    },
   },
   methods: {
+    getParamsById(paramsArray){
+      const params = {}
+      paramsArray.forEach(param => {
+        params[param.id] = param
+      })
+      return params
+    },
     endpoint (input) {
       return (
         'https://api.mapbox.com/geocoding/v5/mapbox.places/' +
