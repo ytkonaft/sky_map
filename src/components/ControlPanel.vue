@@ -1,8 +1,7 @@
 <template>
   <div id="control-panel">
     <h1 class="product-page_title" itemprop="name">
-      Карта звездного неба /
-      <span class="js-color_name">Blue ocean</span>
+      Карта звездного неба
     </h1>
 
     <div class="product-page_variants">
@@ -66,6 +65,7 @@
                 <div class="art-field-value">
                   <input
                     v-model="text1"
+                    v-on:keyup="textToParent"
                     id="pers_input1"
                     maxlength="40"
                     class="art-order-field"
@@ -85,6 +85,7 @@
                 <div class="art-field-value">
                   <input
                     v-model="text2"
+                    v-on:keyup="textToParent"
                     id="pers_input2"
                     maxlength="45"
                     class="art-order-field"
@@ -104,6 +105,7 @@
                 <div class="art-field-value">
                   <input
                     v-model="text3"
+                    v-on:keyup="textToParent"
                     id="pers_input3"
                     maxlength="20"
                     class="art-order-field"
@@ -140,7 +142,7 @@ import vSelect from 'vue-select'
 import 'vue-select/dist/vue-select.css'
 import axios from 'axios'
 import AjaxService from '../services/AjaxService'
-import testData from '../assets/download'
+import Apiservice from '../services/ApiService'
 
 export default {
   name: 'ControlPanel',
@@ -195,12 +197,13 @@ export default {
   },
   mounted() {
     // this.size = this.options[0].value
-    const apiOptions = testData.data
+    this.styles = Apiservice.getStyles()
+    this.apiBorders = Apiservice.getBorders()
+    this.apiSizes = Apiservice.getSizes(0)
     // console.log(apiOptions)
-    this.styles = apiOptions.styles
-    console.log(this.borders)
-    const newArr = apiOptions.prices.map(({size, border}) => {
-      console.log(border)
+    //this.styles = apiOptions.styles
+    this.prices = Apiservice.getPrices()
+    const newArr = this.prices.map(({size, border}) => {
       return `${this.sizes[size]['name']} + ${this.borders[border]['name']} рамка`
       // console.log(element.border)
       // let borders = apiOptions.borders
@@ -237,10 +240,10 @@ export default {
   },
   computed:{
     borders(){
-      return this.getParamsById(testData.data.borders)
+      return this.getParamsById(this.apiBorders)
     },
     sizes(){
-      return this.getParamsById(testData.data.sizes)
+      return this.getParamsById(this.apiSizes)
     },
   },
   methods: {
@@ -262,18 +265,23 @@ export default {
       return result.place_name
     },
     addDistributionGroup (group) {
-      console.log(group.selectedObject)
       this.place_name = group.selectedObject.place_name
       this.address = group.selectedObject.center
       this.$emit('updateLocation', [this.address[0], this.address[1]])
     },
     getAddressData: function(addressData, placeResultData, id) {
       this.address = addressData
-      console.log(this.address)
     },
     setDate: function (date) {
       this.date = date
       this.$emit('updateDate', date)
+    },
+    textToParent: function (target) {
+      this.$emit('inputChange', {
+        text1: this.text1,
+        text2: this.text2,
+        text3: this.text3
+      })
     },
     b64toBlob (b64Data, contentType, sliceSize) {
       contentType = contentType || ''
@@ -466,9 +474,11 @@ export default {
 .art-field-value input[type="text"] {
   background-color: #fff;
   border: 1px solid #cccccc;
-  font: 12px/24px "proxima-nova",Arial,sans-serif;
-  height: 24px;
-  padding: 0 0 0 10px;
+  border-radius: 4px;
+  font: 16px/24px "proxima-nova",Arial,sans-serif;
+  height: 34px;
+  color: #333;
+  padding: 0 0 0 5px;
   box-sizing: border-box;
   width: 100%;
 }
@@ -507,7 +517,10 @@ export default {
 }
 
 .autocomplete__inputs input {
-  height: 24px;
+  height: 34px;
+  border-radius: 4px;
+  font-size: 16px;
+  color: #333;
 }
 
 /* Form */
@@ -579,12 +592,21 @@ input[type="number"]::-webkit-outer-spin-button { height: auto; }
 #celestial-form input[type='text'], 
 #celestial-form input[type='number'], 
 #celestial-form input[type='color'], 
-#celestial-form select, 
+/* #celestial-form select,  */
 #celestial-form input#now, 
 #celestial-form input#here, 
 #celestial-form input#show, 
-#celestial-form input#fullwidth { border: 1px solid #cccccc; border-radius:3px; height:24px; }
-
+#celestial-form input#fullwidth { 
+  border: 1px solid #cccccc;
+  border-radius:4px;
+  color: #333; font-size: 16px;
+  width: 90%;
+  padding-left: 5px;
+  height:34px;
+}
+#celestial-form #location {
+  width: 100%;
+}
 #celestial-form label { margin:0 4px 0 8px; }
 #celestial-form label.header { font-weight:bold; }
 #celestial-form input + span { margin:0 4px 0 2px; }

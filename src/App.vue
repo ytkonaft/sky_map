@@ -2,11 +2,26 @@
   <div id="app">
     <div class="container">
       <div id="preview">
-        <div id="celestial-map" ref="wrapper" ></div>
-        <!-- <input type="button" value="Get image" @click="loadSVG"> -->
-        <img :src="image" class="preview-img">
-      </div>
-      <ControlPanel @updateLocation="check" @updateDate="updateOnDate" />
+        <div class="map-container">
+          <div id="celestial-map" ref="wrapper"></div>
+          <!-- <input type="button" value="Get image" @click="loadSVG"> -->
+          <img :src="image" class="preview-img">
+          <div class="frame">
+            <div id="labels" class="caption">
+                <div class="city">{{ text1 }}</div>
+                <br>
+                <div class="country">{{ text2 }}</div>
+                <br>
+                <div>{{ text3 }}</div>
+            </div>
+          </div>
+        </div>
+      </div>    
+      <ControlPanel 
+        @updateLocation="check"
+        @updateDate="updateOnDate"
+        @inputChange="updateText"
+      />
     </div>
   </div>
 </template>
@@ -25,6 +40,9 @@ export default {
 
   data: function () {
     return {
+      text1: 'В этот день звезды решили за нас',
+      text2: 'я знаю, что такое любовь, благодаря тебе',
+      text3: 'Россия, Москва',
       image: '',
       config: {
         width: 3000,
@@ -107,6 +125,11 @@ export default {
     canvasDiv.id = 'canvas'
   },
   methods: {
+    updateText (obj) {
+      this.text1 = obj.text1,
+      this.text2 = obj.text2,
+      this.text3 = obj.text3
+    },
     check (data) {
       Celestial.rotate({ center: [data[0], data[1], 0] })
     },
@@ -145,6 +168,8 @@ export default {
 #celestial-map {
   display: block;
   height: auto !important;
+  width: 80%;
+  margin: 1.5em auto 0 auto;
 }
 
 #celestial-map canvas {
@@ -176,6 +201,37 @@ export default {
 }
 .preview-img {
   width: 100%
+}
+
+.map-container {
+  min-height: 600px; 
+}
+.frame {
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 1.5em;
+  padding: 0;
+  // -webkit-font-smoothing: antialiased;
+  // box-sizing: border-box;
+  // position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  // pointer-events: none;
+  z-index: 10000;
+
+  .caption {
+    text-align: center;
+    color: #FFF;
+    // background: #fff;
+    // padding: 1.12em;
+    margin: 0;
+    bottom: -2px;
+    left: -2px;
+    right: -2px;
+    width: calc(100% + 4px);
+  }
 }
 
 @import './assets/scss/media';
