@@ -46,8 +46,7 @@
           <div id="celestial-form">
             <input type="text" title="datetime-hide" id="datetime1" value="2019-09-05 08:51:49 +0300" ref="datetime">
           </div>
-          
-          <!-- <datepicker :value="date" :language="ru" @selected="setDate"></datepicker> -->  
+          <!-- <datepicker :value="date" :language="ru" @selected="setDate"></datepicker> -->
         </div>
       </div>
     </div>
@@ -105,13 +104,11 @@
                 <div class="art-field-value">
                   <input
                     v-model="text3"
-                    v-on:keyup="textToParent"
                     id="pers_input3"
                     maxlength="20"
                     class="art-order-field"
                     name="perstext_3"
                     placeholder="Россия, Москва"
-                    value
                     autocomplete="off"
                     type="text"
                   />
@@ -190,64 +187,48 @@ export default {
       styles: null,
       config: '',
       date: '',
-      text1: '',
-      text2: '',
-      text3: ''
+      text1: 'В этот день звезды решили за нас',
+      text2: 'я знаю, что такое любовь, благодаря тебе',
+      text3: 'Россия, Москва'
     }
   },
-  mounted() {
+  mounted () {
     // this.size = this.options[0].value
     this.styles = Apiservice.getStyles()
     this.apiBorders = Apiservice.getBorders()
-    this.apiSizes = Apiservice.getSizes(0)
-    // console.log(apiOptions)
-    //this.styles = apiOptions.styles
+    this.apiSizes = Apiservice.getSizes()
     this.prices = Apiservice.getPrices()
-    const newArr = this.prices.map(({size, border}) => {
-      return `${this.sizes[size]['name']} + ${this.borders[border]['name']} рамка`
-      // console.log(element.border)
-      // let borders = apiOptions.borders
-      // let sizes = apiOptions.sizes
-      // console.log(borders.find(borders => borders.id === element.border).name)
-      // this.options.push({
-      //   label: `
-      //    ${sizes.find(sizes => sizes.id === element.size).name}
-      //    ${borders.find(borders => borders.id === element.border).name} рамка` + ' - ' + `${element.price}`,
-      //   value: element.id
-      // })
+    console.log(this.prices)
+    const newArr = this.prices.map(({size, border, price}) => {
+      return `${this.sizes[size]['name']} + ${this.borders[border]['name']} рамка - ${price}`
     })
+
     this.options = newArr
-    // axios
-      //.get('http://starsky.loc/api/aaa')
-      // .get('http://localhost:7777/download.json')
-      // .then((response) => {
-        // console.log(response.data)
-        // if (response.data.success === 'true') {
-      //   }
-      // })
-      // .catch((error) => {
-      //   console.log(error)
-      // })
-    // AjaxService
-    //   .makeGetRequest(`get/`)
-      // .then((response) => {
-      //   console.log(response)
-      //   this.apiOptions = response
-      // })
-      // .catch((error) => {
-      //   console.log(error)
-      // })
   },
-  computed:{
-    borders(){
+  computed: {
+    borders () {
       return this.getParamsById(this.apiBorders)
     },
-    sizes(){
+    sizes () {
       return this.getParamsById(this.apiSizes)
+    }
+  },
+  watch: {
+    design (val) {
+      this.$emit('changeDesign', this.design)
     },
+    text1 () {
+      this.textToParent()
+    },
+    text2 () {
+      this.textToParent()
+    },
+    text3 () {
+      this.textToParent()
+    }
   },
   methods: {
-    getParamsById(paramsArray){
+    getParamsById (paramsArray) {
       const params = {}
       paramsArray.forEach(param => {
         params[param.id] = param
@@ -264,72 +245,69 @@ export default {
     formattedDisplay (result) {
       return result.place_name
     },
-    addDistributionGroup (group) {
-      this.place_name = group.selectedObject.place_name
-      this.address = group.selectedObject.center
+    addDistributionGroup ({selectedObject: {place_name, center, ...rest}}) {
+      this.place_name = place_name
+      this.address = center
+      this.text3 = rest.text
       this.$emit('updateLocation', [this.address[0], this.address[1]])
     },
-    getAddressData: function(addressData, placeResultData, id) {
+    getAddressData (addressData, placeResultData, id) {
       this.address = addressData
     },
-    setDate: function (date) {
+    setDate (date) {
       this.date = date
       this.$emit('updateDate', date)
     },
-    textToParent: function (target) {
-      this.$emit('inputChange', {
-        text1: this.text1,
-        text2: this.text2,
-        text3: this.text3
-      })
+    textToParent () {
+      const {text1, text2, text3} = this
+      this.$emit('inputChange', {text1, text2, text3})
     },
     b64toBlob (b64Data, contentType, sliceSize) {
       contentType = contentType || ''
       sliceSize = sliceSize || 512
 
-      var byteCharacters = atob(b64Data)
-      var byteArrays = []
+      const byteCharacters = atob(b64Data)
+      let byteArrays = []
 
       for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-          var slice = byteCharacters.slice(offset, offset + sliceSize)
+        var slice = byteCharacters.slice(offset, offset + sliceSize)
 
-          var byteNumbers = new Array(slice.length)
-          for (var i = 0; i < slice.length; i++) {
-              byteNumbers[i] = slice.charCodeAt(i)
-          }
+        var byteNumbers = new Array(slice.length)
+        for (var i = 0; i < slice.length; i++) {
+          byteNumbers[i] = slice.charCodeAt(i)
+        }
 
-          var byteArray = new Uint8Array(byteNumbers)
+        var byteArray = new Uint8Array(byteNumbers)
 
-          byteArrays.push(byteArray)
+        byteArrays.push(byteArray)
       }
 
-      var blob = new Blob(byteArrays, {type: contentType});
-      return blob;
+      return new Blob(byteArrays, {type: contentType})
     },
     sendData () {
       console.log('sending axios')
-      let ImageURL = window.Celestial.context.canvas.toDataURL('image/png')
+      const ImageURL = window.Celestial.context.canvas.toDataURL('image/png')
 
-      let block = ImageURL.split(";")
-      let contentType = block[0].split(":")[1]
-      let realData = block[1].split(",")[1]
+      const block = ImageURL.split(';')
+      const contentType = block[0].split(':')[1]
+      const realData = block[1].split(',')[1]
 
-      let blob = this.b64toBlob(realData, contentType);
+      const blob = this.b64toBlob(realData, contentType)
 
-      let formData = new FormData()
+      const formData = new FormData()
       formData.append('design', this.design)
       formData.append('place_name', this.place_name)
-      formData.append('date', this.$refs.datetime.value),
+      formData.append('date', this.$refs.datetime.value)
       formData.append('size', this.size)
       formData.append('text1', this.text1)
       formData.append('text2', this.text2)
       formData.append('text3', this.text3)
       formData.append('img', blob)
 
-      let headers = {
+      const headers = {
         'Content-Type': 'multipart/form-data'
       }
-      AjaxService.makePostRequest(`/starmap`, formData, headers)
+      AjaxService.makePostRequest(`starmap`, formData, headers)
         .then((response) => {
           console.log(response)
         })
@@ -534,8 +512,22 @@ input[title="datetime-hide"] {
   display: none !important;
 }
 
-#error { position:absolute; min-width:100px; height:auto; padding: 2px 4px; color:#f00; background:#fff; border:2px solid #f00; 
-border-radius:3px; font-weight:normal; display:block; top:-9999px; left:-9999px; opacity:0; transition:opacity 1s linear; }
+#error {
+  position:absolute;
+  min-width:100px;
+  height:auto;
+  padding: 2px 4px;
+  color:#f00;
+  background:#fff;
+  border:2px solid #f00;
+  border-radius:3px;
+  font-weight:normal;
+  display:block;
+  top:-9999px;
+  left:-9999px;
+  opacity:0;
+  transition:opacity 1s linear;
+}
 
 /* What parts to show */
 #celestial-form #general,
@@ -559,44 +551,44 @@ input[type="number"]::-webkit-outer-spin-button { height: auto; }
   position:relative;
   display:inline-block;
   top:7px;
-  left:-31px; 
-  width:28px; 
+  left:-31px;
+  width:28px;
   height:24px;
   border:0px none;
   border-left:1px solid #ccc;
-  background-color: #f7f7f7; 
+  background-color: #f7f7f7;
   background-image: url('../assets/dtpick.png');
   background-position: -45px 1px;
   cursor:default;
 }
 #celestial-form #datepick.active { background-position: -69px 1px; }
-#celestial-form #datetime { cursor:default; } 
+#celestial-form #datetime { cursor:default; }
 #celestial-form input#now { position:relative; left:-24px; }
-#celestial-form #constellation { } 
-#celestial-form #constellation option { color:#000; } 
-#celestial-form #constellation option[value=''] { color:#ccc; } 
+#celestial-form #constellation { }
+#celestial-form #constellation option { color:#000; }
+#celestial-form #constellation option[value=''] { color:#ccc; }
 
 #celestial-form .loc { width: 100%; }
 #celestial-form input[type='button'] { width:64px; padding-bottom:1px; margin-top:4px; float:right; background: #f7f7f7; }
 #celestial-form input#fullwidth { width:108px; }
 #celestial-form input#width { margin-left:2px; }
-#celestial-form input#now, 
+#celestial-form input#now,
 #celestial-form input#here  { width:48px; margin-left:2px; float:none; }
 #celestial-form input[type='button']:hover,
 #celestial-form #datepick:hover { background-color:#eee; }
 
-#celestial-form input[type='text']:disabled, 
-#celestial-form input[type='number']:disabled, 
+#celestial-form input[type='text']:disabled,
+#celestial-form input[type='number']:disabled,
 #celestial-form input[type='color']:disabled { border: 1px solid #ccc; background:#eee }
 
-#celestial-form input[type='text'], 
-#celestial-form input[type='number'], 
-#celestial-form input[type='color'], 
+#celestial-form input[type='text'],
+#celestial-form input[type='number'],
+#celestial-form input[type='color'],
 /* #celestial-form select,  */
-#celestial-form input#now, 
-#celestial-form input#here, 
-#celestial-form input#show, 
-#celestial-form input#fullwidth { 
+#celestial-form input#now,
+#celestial-form input#here,
+#celestial-form input#show,
+#celestial-form input#fullwidth {
   border: 1px solid #cccccc;
   border-radius:4px;
   color: #333; font-size: 16px;
@@ -610,7 +602,7 @@ input[type="number"]::-webkit-outer-spin-button { height: auto; }
 #celestial-form label { margin:0 4px 0 8px; }
 #celestial-form label.header { font-weight:bold; }
 #celestial-form input + span { margin:0 4px 0 2px; }
-#celestial-form label:first-child, 
+#celestial-form label:first-child,
 #celestial-form br + label { margin-left:0; }
 
 #celestial-date { position:absolute; top:-9999px; width:193px; text-align:center; border:1px solid #000;

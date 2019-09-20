@@ -1,18 +1,17 @@
 <template>
   <div id="app">
     <div class="container">
-      <div id="preview">
+      <div id="preview" :class="totalClass">
         <div class="map-container">
           <div id="celestial-map" ref="wrapper"></div>
           <!-- <input type="button" value="Get image" @click="loadSVG"> -->
           <img :src="image" class="preview-img">
           <div class="frame">
             <div id="labels" class="caption">
-                <div class="city">{{ text1 }}</div>
+                <div class="text1">{{ text1 }}</div>
                 <br>
                 <div class="country">{{ text2 }}</div>
-                <br>
-                <div>{{ text3 }}</div>
+                <div class="city">{{ text3 }}</div>
             </div>
           </div>
         </div>
@@ -21,6 +20,7 @@
         @updateLocation="check"
         @updateDate="updateOnDate"
         @inputChange="updateText"
+        @changeDesign="updateDesign"
       />
     </div>
   </div>
@@ -44,6 +44,7 @@ export default {
       text2: 'я знаю, что такое любовь, благодаря тебе',
       text3: 'Россия, Москва',
       image: '',
+      design: '',
       config: {
         width: 3000,
         location: true,
@@ -89,6 +90,18 @@ export default {
       }
     }
   },
+  computed:{
+    totalClass(){
+     switch (this.design) {
+       case '725449':
+         return 'rose'
+      case '725448':
+        return 'navy'
+        default:
+          return ''
+     }
+    }
+  },
   mounted () {
     // D3-Celestial Properties different from default
 
@@ -104,14 +117,14 @@ export default {
         baseScale = Celestial.mapProjection.scale()
         var ast = Celestial.getData(json, this.config.transform)
         // Add the symbols
-        Celestial.container
-          .selectAll('.asts')
-          .data(ast.features)
-          .enter()
-          .append('path')
-          .replace('image/png', 'image/octet-stream')
-        download.setAttribute('href', image)
-          .attr('class', 'ast')
+        // Celestial.container
+        //   .selectAll('.asts')
+        //   .data(ast.features)
+        //   .enter()
+        //   .append('path')
+        //   .replace('image/png', 'image/octet-stream')
+        // download.setAttribute('href', image)
+          // .attr('class', 'ast')
         Celestial.redraw()
       },
       redraw: function () {
@@ -119,12 +132,15 @@ export default {
       }
     })
 
-    console.log(Celestial)
     Celestial.display(this.config)
     let canvasDiv = this.$refs.wrapper.children[0]
     canvasDiv.id = 'canvas'
+    // const ctx = Celestial.context.canvas.getContext('2d')
   },
   methods: {
+    updateDesign (val) {
+      this.design = val
+    },
     updateText (obj) {
       this.text1 = obj.text1,
       this.text2 = obj.text2,
@@ -155,7 +171,25 @@ export default {
 }
 </script>
 <style lang="scss">
+@font-face {
+    font-family: 'CentSchbkCyrill';
+    src: url('./assets/fonts/tt6806m.eot');
+    src: url('./assets/fonts/tt6806m.eot') format('embedded-opentype'),
+         url('./assets/fonts/tt6806m.woff2') format('woff2'),
+         url('./assets/fonts/tt6806m.woff') format('woff'),
+         url('./assets/fonts/tt6806m.ttf') format('truetype'),
+         url('./assets/fonts/tt6806m.svg#tt6806m') format('svg');
+}
 
+@font-face {
+    font-family: 'CentSchbkCyrillIt';
+    src: url('./assets/fonts/tt6805m.eot');
+    src: url('./assets/fonts/tt6805m.eot') format('embedded-opentype'),
+         url('./assets/fonts/tt6805m.woff2') format('woff2'),
+         url('./assets/fonts/tt6805m.woff') format('woff'),
+         url('./assets/fonts/tt6805m.ttf') format('truetype'),
+         url('./assets/fonts/tt6805m.svg#tt6806m') format('svg');
+}
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -170,11 +204,16 @@ export default {
   height: auto !important;
   width: 80%;
   margin: 1.5em auto 0 auto;
+  border-radius: 50%;
+  overflow: hidden;
+  // background: #000;
+  border: 2px solid #fff;
 }
 
 #celestial-map canvas {
   width: 100%;
   height: auto;
+  transform: scale(1.03) translateY(2px)
 }
 
 .container {
@@ -198,13 +237,31 @@ export default {
   background-repeat: no-repeat;
   width: 49%;
   flex-direction: column;
+  &.navy {
+    background: #381074;
+    #celestial-map {
+    }
+  }
+  &.rose {
+    background: #FFF;
+    border: 2px solid #000;
+    #celestial-map {
+      background: linear-gradient(120deg, rgba(56,16,116,1) 0%, rgba(225,151,191,1) 100%);
+    }
+    #labels {
+      color: #000;
+    }
+  }
+  // &.navy {
+  //   background-color: #381074;
+  // }
 }
 .preview-img {
   width: 100%
 }
 
 .map-container {
-  min-height: 600px; 
+  min-height: 700px;
 }
 .frame {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
@@ -222,6 +279,7 @@ export default {
   z-index: 10000;
 
   .caption {
+    font-family: 'CentSchbkCyrill', ;
     text-align: center;
     color: #FFF;
     // background: #fff;
@@ -231,6 +289,21 @@ export default {
     left: -2px;
     right: -2px;
     width: calc(100% + 4px);
+    
+    .country, .city {
+      font-style: italic;
+      font-size: 10px;
+      margin-top: 0.5em;
+    }
+    .country {
+      font-family: 'CentSchbkCyrillIt', sans-serif;
+    }
+    .city {
+      font-family: 'sans';
+      margin-top: 2em;
+    }
+
+    
   }
 }
 
