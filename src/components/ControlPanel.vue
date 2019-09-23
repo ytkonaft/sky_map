@@ -8,12 +8,24 @@
       <div class="product-page_variants_block other">
         <div class="name design">Выберите дизайн</div>
         <div class="input_wrap">
-          <label v-for="style in styles" :key="style.id" title="Blue ocean">
+          <label v-for="style in styles" :key="style.id" :title="style.name">
             <input type="radio" name="color" :value="style.id" v-model="design">
             <span><img :src=style.picture alt=""></span>
           </label>
         </div>
 
+      </div>
+    </div>
+
+    <div class="product-page_variants">
+      <div class="product-page_variants_block other">
+        <div class="name design">Выберите форму</div>
+        <div class="input_wrap">
+          <label>
+            <input type="radio" value="heart" v-model="shape">
+            <span>1</span>
+          </label>
+        </div>
       </div>
     </div>
 
@@ -184,6 +196,7 @@ export default {
       size: '',
       image: '',
       design: '',
+      shape: '',
       styles: null,
       config: '',
       date: '',
@@ -216,6 +229,9 @@ export default {
   watch: {
     design (val) {
       this.$emit('changeDesign', this.design)
+    },
+    shape (val) {
+      this.$emit('changeShape', this.shape)
     },
     text1 () {
       this.textToParent()

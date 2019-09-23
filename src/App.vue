@@ -3,7 +3,11 @@
     <div class="container">
       <div id="preview" :class="totalClass">
         <div class="map-container">
-          <div id="celestial-map" ref="wrapper"></div>
+          <div id="celestial-map" style="border:none;border-radius:0;" ref="wrapper">
+            <div class="heart" height="600">
+              <Heart/>
+            </div>
+          </div>
           <!-- <input type="button" value="Get image" @click="loadSVG"> -->
           <img :src="image" class="preview-img">
           <div class="frame">
@@ -15,12 +19,13 @@
             </div>
           </div>
         </div>
-      </div>    
-      <ControlPanel 
+      </div>
+      <ControlPanel
         @updateLocation="check"
         @updateDate="updateOnDate"
         @inputChange="updateText"
         @changeDesign="updateDesign"
+        @changeShape="updateShape"
       />
     </div>
   </div>
@@ -28,6 +33,7 @@
 
 <script>
 import ControlPanel from './components/ControlPanel'
+import Heart from './components/heart'
 
 let Celestial = require('d3-celestial/celestial.js')
 let geo = require('d3-celestial/lib/d3.geo.projection')
@@ -35,7 +41,8 @@ let geo = require('d3-celestial/lib/d3.geo.projection')
 export default {
   name: 'App',
   components: {
-    ControlPanel
+    ControlPanel,
+    Heart
   },
 
   data: function () {
@@ -45,6 +52,7 @@ export default {
       text3: 'Россия, Москва',
       image: '',
       design: '',
+      shape: '',
       config: {
         width: 3000,
         location: true,
@@ -90,16 +98,24 @@ export default {
       }
     }
   },
-  computed:{
-    totalClass(){
-     switch (this.design) {
-       case '725449':
-         return 'rose'
-      case '725448':
-        return 'navy'
+  computed: {
+    totalClass () {
+      switch (this.design) {
+        case '725449':
+          return 'rose'
+        case '725448':
+          return 'navy'
         default:
           return ''
-     }
+      }
+    },
+    shapeClass () {
+      switch (this.shape) {
+        case 'heart':
+          return 'heart'
+        default:
+          return ''
+      }
     }
   },
   mounted () {
@@ -124,7 +140,7 @@ export default {
         //   .append('path')
         //   .replace('image/png', 'image/octet-stream')
         // download.setAttribute('href', image)
-          // .attr('class', 'ast')
+        // .attr('class', 'ast')
         Celestial.redraw()
       },
       redraw: function () {
@@ -140,6 +156,9 @@ export default {
   methods: {
     updateDesign (val) {
       this.design = val
+    },
+    updateShape (val) {
+      this.shape = val
     },
     updateText (obj) {
       this.text1 = obj.text1,
@@ -208,12 +227,52 @@ export default {
   overflow: hidden;
   // background: #000;
   border: 2px solid #fff;
+  position: relative; 
 }
 
 #celestial-map canvas {
   width: 100%;
   height: auto;
   transform: scale(1.03) translateY(2px)
+}
+
+#canvas {
+  svg {
+    display: none;
+  }
+}
+
+.heart {
+  display: block !important;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform: scale(1.03) translateY(2px);
+  z-index: 100;
+  // background: url('./assets/heart3.png');
+  img, svg path {
+    width: 100%;
+    height: 100%;
+  }
+}
+.top_layer {
+  display: none;
+  &.heart {
+    display: block !important;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform: scale(1.03) translateY(2px);
+    z-index: 100;
+    // background: url('./assets/heart3.png');
+    img, svg path {
+      width: 100%;
+      height: 100%;
+    }
+    &.heart {
+      background: url('./assets/heart3.png')
+    }
+  }
 }
 
 .container {
@@ -289,7 +348,6 @@ export default {
     left: -2px;
     right: -2px;
     width: calc(100% + 4px);
-    
     .country, .city {
       font-style: italic;
       font-size: 10px;
@@ -302,8 +360,6 @@ export default {
       font-family: 'sans';
       margin-top: 2em;
     }
-
-    
   }
 }
 

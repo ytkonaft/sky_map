@@ -4,6 +4,6 @@ const prodEnv = require('./prod.env')
 
 module.exports = merge(prodEnv, {
   NODE_ENV: '"development"',
-  VUE_APP_API_URL: '"http://starsky.loc"',
-  VUE_GET_API: '"https://www.pichshop.ru"'
+  VUE_GET_API: '"http://starsky.loc"'
+  // VUE_GET_API: '"https://www.pichshop.ru"'
 })
