@@ -26,8 +26,10 @@
 
 <script>
 export default {
-  data () {
-    fillColor: '#333'
+  data: function () {
+    return {
+      // fillColor: '#333'
+    }
   },
   props: ['theme'],
   computed: {

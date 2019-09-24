@@ -250,7 +250,6 @@ export default {
   methods: {
     setShape (e) {
       if (this.shape !== '') {
-        console.log('null')
         this.shape = ''
       } else {
         this.shape = e.srcElement.value
