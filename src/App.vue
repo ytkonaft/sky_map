@@ -16,6 +16,7 @@
                 <div class="text1">{{ text1 }}</div>
                 <br>
                 <div class="country">{{ text2 }}</div>
+                <div class="city" v-show="!showDate">24 сентября 2019 {{ date }}</div>
                 <div class="city">{{ text3 }}</div>
             </div>
           </div>
@@ -23,10 +24,11 @@
       </div>
       <ControlPanel
         @updateLocation="check"
-        @updateDate="updateOnDate"
+        @changeDate="updateDate"
         @inputChange="updateText"
         @changeDesign="updateDesign"
         @changeShape="updateShape"
+        @toggleShowDate="updateShowDate"
       />
     </div>
   </div>
@@ -37,6 +39,7 @@ import ControlPanel from './components/ControlPanel'
 import Heart from './components/heart'
 
 let Celestial = require('d3-celestial/celestial.js')
+// let Celestial = require('./libs/celestial.js')
 let geo = require('d3-celestial/lib/d3.geo.projection')
 
 export default {
@@ -51,6 +54,8 @@ export default {
       text1: 'В этот день звезды решили за нас',
       text2: 'я знаю, что такое любовь, благодаря тебе',
       text3: 'Россия, Москва',
+      showDate: false,
+      date: '',
       image: '',
       design: '',
       shape: '',
@@ -83,9 +88,9 @@ export default {
             font: '0 Helvetica, Arial, sans-serif',
             align: 'center',
             baseline: 'middle',
-            opacity: 0.9
+            opacity: 1
           },
-          linestyle: { stroke: '#999', width: 1.5, opacity: 0.8 }
+          linestyle: { stroke: '#999', width: 4.5, opacity: 1 }
         },
         dsos: { show: false },
         mw: { show: false },
@@ -161,6 +166,10 @@ export default {
     updateShape (val) {
       this.shape = val
     },
+    updateShowDate (val) {
+      console.log(val)
+      this.showDate = val
+    },
     updateText (obj) {
       this.text1 = obj.text1,
       this.text2 = obj.text2,
@@ -169,7 +178,8 @@ export default {
     check (data) {
       Celestial.rotate({ center: [data[0], data[1], 0] })
     },
-    updateOnDate (date) {
+    updateDate (date) {
+      console.log('aae')
       console.log(date)
       Celestial.date(date)
       this.config.daterange = date

@@ -56,15 +56,18 @@
 
     <div class="date-wrap">
       <div class="product-page_variants">
-        <div class="product-page_variants_block other">
+        <div class="product-page_variants_block other" v-show="!showDate">
           <div class="name">Выберите дату события</div>
-
           <div id="celestial-form">
             <input type="text" title="datetime-hide" id="datetime1" value="2019-09-05 08:51:49 +0300" ref="datetime">
           </div>
           <!-- <datepicker :value="date" :language="ru" @selected="setDate"></datepicker> -->
         </div>
       </div>
+      <label>
+        <input id="date_check" type="checkbox" name="date_check" v-model="showDate">
+          Не устанавливать дату на карту
+      </label>
     </div>
 
     <div class="product-page_price-wrap">
@@ -167,7 +170,6 @@ export default {
 
   data: function () {
     return {
-      // apiOptions: null,
       options: [],
       // options: [
       //   {
@@ -195,6 +197,7 @@ export default {
       //     value: 714228
       //   }
       // ],
+      showDate: false,
       address: '',
       place_name: '',
       size: '',
@@ -245,6 +248,13 @@ export default {
     },
     text3 () {
       this.textToParent()
+    },
+    date (val) {
+      console.log('ttt')
+      this.$emit('changeDate', this.date)
+    },
+    showDate (val) {
+      this.$emit('toggleShowDate', val)
     }
   },
   methods: {
@@ -266,7 +276,7 @@ export default {
       return (
         'https://api.mapbox.com/geocoding/v5/mapbox.places/' +
         input +
-        '.json?types=place&access_token=pk.eyJ1IjoibWFrc2ltOTg5IiwiYSI6ImNqeDY0OXZrbzA4Nnk0ZHF1bG9ybmxvNGsifQ.-OcDOS1w1vyn8poaNOtsDg'
+        '.json?types=place&language=ru&access_token=pk.eyJ1IjoibWFrc2ltOTg5IiwiYSI6ImNqeDY0OXZrbzA4Nnk0ZHF1bG9ybmxvNGsifQ.-OcDOS1w1vyn8poaNOtsDg'
       )
     },
     formattedDisplay (result) {
@@ -281,10 +291,11 @@ export default {
     getAddressData (addressData, placeResultData, id) {
       this.address = addressData
     },
-    setDate (date) {
-      this.date = date
-      this.$emit('updateDate', date)
-    },
+    // setDate (date) {
+    //   console.log('a')
+    //   this.date = date
+    //   this.$emit('updateDate', date)
+    // },
     textToParent () {
       const {text1, text2, text3} = this
       this.$emit('inputChange', {text1, text2, text3})
@@ -420,6 +431,16 @@ export default {
 /* city */
 .product-page_variants_block {
   margin-top: 30px;
+}
+.date-wrap .product-page_variants_block {
+    margin-top: 0;
+}
+.date-wrap {
+  margin-top: 30px;
+}
+.date-wrap label {
+  margin: 7px 0px;
+  display: block;
 }
 .date-wrap input[type="text"] {
   background-color: #fff;
@@ -648,7 +669,8 @@ font: 13px/1 sans-serif; }
 #celestial-date #hr { border-right: 0px none; border-radius: 3px 0 0 3px;  }
 #celestial-date #min { border-right: 0px none; border-left: 0px none;  border-radius: 0; }
 #celestial-date #sec { border-left: 0px none;  border-radius: 0 3px 3px 0; }
-#celestial-date #tz { margin: 0 0 2px 4px; }
+/* #celestial-date #tz { margin: 0 0 2px 4px; } */
+#celestial-date #tz { display: none; }
 #celestial-date #cal { display:inline-block; width:182px; margin:0 4px;  }
 #celestial-date .date { display:inline-block; width:19px; height:14px; border:1px solid #fff; color:#000; font-weight: bold; text-align:right; vertical-align:middle; padding:2px 4px 2px 0; cursor:pointer; }
 #celestial-date .grey { color:#ccc; }

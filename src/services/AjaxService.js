@@ -5,7 +5,7 @@ class AjaxService {
   constructor () {
     // this.siteUrl = process.env.VUE_APP_API_URL
     this.siteUrl = process.env.VUE_GET_API
-    this.apiVersion = 'api/'
+    this.apiVersion = 'api/sky/'
 
     this.apiOptions = testData.data
   }
