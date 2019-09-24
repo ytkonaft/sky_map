@@ -3,9 +3,10 @@
     <div class="container">
       <div id="preview" :class="totalClass">
         <div class="map-container">
-          <div id="celestial-map" style="border:none;border-radius:0;" ref="wrapper">
+          <div id="celestial-map" :class="dynamicComponent" ref="wrapper">
             <div class="heart" height="600">
-              <Heart/>
+              <!-- <Heart :theme="totalClass"/> -->
+              <component :is="dynamicComponent" :theme="totalClass"></component>
             </div>
           </div>
           <!-- <input type="button" value="Get image" @click="loadSVG"> -->
@@ -109,7 +110,7 @@ export default {
           return ''
       }
     },
-    shapeClass () {
+    dynamicComponent () {
       switch (this.shape) {
         case 'heart':
           return 'heart'
@@ -227,7 +228,12 @@ export default {
   overflow: hidden;
   // background: #000;
   border: 2px solid #fff;
-  position: relative; 
+  position: relative;
+
+  &.heart {
+    border:none;
+    border-radius:0;
+  }
 }
 
 #celestial-map canvas {
@@ -247,7 +253,7 @@ export default {
   position: absolute;
   width: 100%;
   height: 100%;
-  transform: scale(1.03) translateY(2px);
+  // transform: scale(1.03) translateY(2px);
   z-index: 100;
   // background: url('./assets/heart3.png');
   img, svg path {
