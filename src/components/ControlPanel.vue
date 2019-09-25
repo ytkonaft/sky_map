@@ -59,7 +59,7 @@
         <div class="product-page_variants_block other" v-show="!showDate">
           <div class="name">Выберите дату события</div>
           <div id="celestial-form">
-            <input type="text" title="datetime-hide" id="datetime1" value="2019-09-05 08:51:49 +0300" ref="datetime">
+            <input type="text" title="datetime-hide" id="datetime1" >
           </div>
           <!-- <datepicker :value="date" :language="ru" @selected="setDate"></datepicker> -->
         </div>
@@ -206,12 +206,13 @@ export default {
       shape: '',
       styles: null,
       config: '',
-      date: '',
+      // date: '',
       text1: 'В этот день звезды решили за нас',
       text2: 'я знаю, что такое любовь, благодаря тебе',
       text3: 'Россия, Москва'
     }
   },
+  props: ['datetime'],
   mounted () {
     // this.size = this.options[0].value
     this.styles = Apiservice.getStyles()
@@ -335,7 +336,7 @@ export default {
       const formData = new FormData()
       formData.append('design', this.design)
       formData.append('place_name', this.place_name)
-      formData.append('date', this.$refs.datetime.value)
+      formData.append('date', this.datetime)
       formData.append('size', this.size)
       formData.append('text1', this.text1)
       formData.append('text2', this.text2)

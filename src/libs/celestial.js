@@ -1,4 +1,6 @@
-// Copyright 2015 Olaf Frohn https://github.com/ofrohn, see LICENSE
+import d3js from './lib/d3'
+import d3_geo_projection from './lib/d3.geo.projection'
+
 !(function() {
   var Celestial = {
     version: '0.6.15',
@@ -1075,8 +1077,6 @@
 
   //Export entire object if invoked by require
   if (typeof module === 'object' && module.exports) {
-    var d3js = require('./lib/d3.js'),
-      d3_geo_projection = require('./lib/d3.geo.projection.js')
     module.exports = {
       Celestial: function() {
         return Celestial
@@ -1384,6 +1384,7 @@
     res.type = dat.type
     if (has(dat, 'callback')) res.callback = dat.callback
     if (has(dat, 'redraw')) res.redraw = dat.redraw
+    if (dat.timechanged) Celestial.timechanged = dat.timechanged
     Celestial.data.push(res)
   }
 
@@ -3772,7 +3773,7 @@ canvas.text = function () {
           s = tz < 0 ? ' +' : ' −'
         tzs = s + pad(h) + pad(m)
       }
-      return dtFormat(dt)
+      return dtFormat(dt) 
     }
 
     function isValidLocation(loc) {
@@ -3785,13 +3786,17 @@ canvas.text = function () {
 
     function go() {
       var lon = $('lon').value,
-        lat = $('lat').value
+      lat = $('lat').value
 
-      date = dtFormat.parse($('datetime').value.slice(0, -6))
+      var v = $('datetime').value + ' +0300'
+      date = dtFormat.parse(v.slice(0, -6))
 
-      var tz = date.getTimezoneOffset()
+      // var tz = date.getTimezoneOffset()
+      var tz = -180
       var dtc = new Date(date.valueOf() + (zone - tz) * 60000)
 
+      Celestial.timechanged(date)
+      console.log(Celestial)
       cfg.horizon.show = !!$('horizon-show').checked
       cfg.planets.show = !!$('planets-show').checked
 
@@ -7083,4 +7088,4 @@ canvas.text = function () {
     }
   })()
   this.Celestial = Celestial
-})()
+}).bind(window)()

@@ -16,13 +16,14 @@
                 <div class="text1">{{ text1 }}</div>
                 <br>
                 <div class="country">{{ text2 }}</div>
-                <div class="city" v-show="!showDate">24 сентября 2019 {{ date }}</div>
+                <div class="city" v-show="!showDate">{{ date }}</div>
                 <div class="city">{{ text3 }}</div>
             </div>
           </div>
         </div>
       </div>
       <ControlPanel
+        :datetime="date"
         @updateLocation="check"
         @changeDate="updateDate"
         @inputChange="updateText"
@@ -38,8 +39,8 @@
 import ControlPanel from './components/ControlPanel'
 import Heart from './components/heart'
 
-let Celestial = require('d3-celestial/celestial.js')
-// let Celestial = require('./libs/celestial.js')
+// let Celestial = require('d3-celestial/celestial.js')
+let Celestial = require('./libs/celestial.js')
 let geo = require('d3-celestial/lib/d3.geo.projection')
 
 export default {
@@ -148,6 +149,10 @@ export default {
         // download.setAttribute('href', image)
         // .attr('class', 'ast')
         Celestial.redraw()
+      },
+      timechanged: (date) => {
+        var options = { year: 'numeric', month: 'long', day: 'numeric' }
+        this.date = date.toLocaleDateString('ru-RU', options)
       },
       redraw: function () {
         scale = window.Celestial.mapProjection.scale() / baseScale
@@ -336,13 +341,23 @@ export default {
 }
 
 .map-container {
-  min-height: 700px;
+  position: relative;
+  @media screen and (min-width: 1040px) {
+    min-height: 800px;
+  }
+  @media screen and (min-width: 970px) and (max-width: 1039px) {
+    min-height: 650px;
+  }
+  @media screen and (min-width: 740px) and (max-width: 969px) {
+    min-height: 580px;
+  }
+  // min-height: 700px;
 }
 .frame {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   text-align: center;
   color: #2c3e50;
-  margin-top: 1.5em;
+  // margin-top: 1.5em;
   padding: 0;
   // -webkit-font-smoothing: antialiased;
   // box-sizing: border-box;
@@ -352,6 +367,14 @@ export default {
   justify-content: flex-end;
   // pointer-events: none;
   z-index: 10000;
+  position: absolute;
+  bottom: 30px;
+  //left: 50%;
+  //margin-left: -50px;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
 
   .caption {
     font-family: 'CentSchbkCyrill', ;
