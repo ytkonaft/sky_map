@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'CANDARAI';
+    src: url('fonts/CANDARAI.eot');
+    src: url('fonts/CANDARAI.eot') format('embedded-opentype'),
+         url('fonts/CANDARAI.woff2') format('woff2'),
+         url('fonts/CANDARAI.woff') format('woff'),
+         url('fonts/CANDARAI.ttf') format('truetype'),
+         url('fonts/CANDARAI.svg#CANDARAI') format('svg');
+}

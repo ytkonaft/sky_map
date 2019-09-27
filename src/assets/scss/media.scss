@@ -5,8 +5,12 @@
   .container {
     flex-direction: column;
   }
-  #preview, #control-panel {
+  #preview {
     width: 100% !important;
+  }
+  #control-panel {
+    width: 95%;
+    margin: 0 auto;
   }
   #preview {
     max-width: 600px;

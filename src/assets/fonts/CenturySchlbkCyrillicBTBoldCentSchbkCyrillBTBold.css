@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'CenturySchlbkCyrillicBTBoldCentSchbkCyrillBTBold';
+    src: url('fonts/CenturySchlbkCyrillicBTBoldCentSchbkCyrillBTBold.eot');
+    src: url('fonts/CenturySchlbkCyrillicBTBoldCentSchbkCyrillBTBold.eot') format('embedded-opentype'),
+         url('fonts/CenturySchlbkCyrillicBTBoldCentSchbkCyrillBTBold.woff2') format('woff2'),
+         url('fonts/CenturySchlbkCyrillicBTBoldCentSchbkCyrillBTBold.woff') format('woff'),
+         url('fonts/CenturySchlbkCyrillicBTBoldCentSchbkCyrillBTBold.ttf') format('truetype'),
+         url('fonts/CenturySchlbkCyrillicBTBoldCentSchbkCyrillBTBold.svg#CenturySchlbkCyrillicBTBoldCentSchbkCyrillBTBold') format('svg');
+}
