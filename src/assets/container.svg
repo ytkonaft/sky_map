@@ -1,0 +1,19 @@
+<svg version="1.1" id="Слой_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 841.89 1190.55" style="enable-background:new 0 0 841.89 1190.55;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:#000000;stroke-width:0.5;stroke-miterlimit:10;}
+	.st1{fill:#FF0000;}
+	.st2{font-family:'CenturySchlbkCyrillicBT-Bold';}
+	.st3{font-size:22px;}
+	.st4{font-family:'Candara-LightItalic';}
+	.st5{font-size:12px;}
+	.st6{font-family:'Affect-Light';}
+	.st7{font-size:11px;}
+</style>
+<rect x="27.74" y="28.81" class="st0" width="786.49" height="1135.14"/>
+<circle class="st1" cx="420.98" cy="462.93" r="321.43"/>
+<text transform="matrix(1 0 0 1 364.2654 952.5249)" class="st2 st3">main_text</text>
+<text transform="matrix(1 0 0 1 383.0738 977.192)" class="st4 st5">secondary_text</text>
+<text transform="matrix(1 0 0 1 408.4772 1120.583)" class="st6 st7">date</text>
+<text transform="matrix(1 0 0 1 406.4477 1136.4147)" class="st6 st7">place</text>
+</svg>

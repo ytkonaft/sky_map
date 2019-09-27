@@ -1,17 +1,14 @@
 <template>
   <div id="app">
     <div class="container">
-      <div id="preview" :class="totalClass">
-        <div class="map-container">
+      <div id="preview" :class="totalClass" ref="prev">
           <div id="celestial-map" :class="dynamicComponent" ref="wrapper">
             <div class="heart" height="600">
-              <!-- <Heart :theme="totalClass"/> -->
               <component :is="dynamicComponent" :theme="totalClass"></component>
             </div>
           </div>
-          <!-- <input type="button" value="Get image" @click="loadSVG"> -->
           <img :src="image" class="preview-img">
-          <div class="frame">
+          <!-- <div class="frame">
             <div id="labels" class="caption">
                 <div class="text1">{{ text1 }}</div>
                 <br>
@@ -19,7 +16,16 @@
                 <div class="city" v-show="!showDate">{{ date }}</div>
                 <div class="city">{{ text3 }}</div>
             </div>
-          </div>
+          </div> -->
+        <div class="map-container2">
+          <svg version="1.1" id="Слой_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 841.89 1190.55" style="enable-background:new 0 0 841.89 1190.55;" xml:space="preserve">
+            <rect x="27.74" y="28.81" class="st0" width="786.49" height="1135.14"/>
+              <circle id="test" class="st1" cx="420.98" cy="462.93" r="321.43"/>
+            <text transform="matrix(1 0 0 1 364.2654 952.5249)" class="st2 st3">{{ text1 }}</text>
+            <text transform="matrix(1 0 0 1 383.0738 977.192)" class="st4 st5">{{ text2 }}</text>
+            <text transform="matrix(1 0 0 1 408.4772 1120.583)" class="st6 st7" v-show="!showDate">{{ date }}</text>
+            <text transform="matrix(1 0 0 1 406.4477 1136.4147)" class="st6 st7">{{ text3 }}</text>
+          </svg>
         </div>
       </div>
       <ControlPanel
@@ -41,7 +47,7 @@ import Heart from './components/heart'
 
 // let Celestial = require('d3-celestial/celestial.js')
 let Celestial = require('./libs/celestial.js')
-let geo = require('d3-celestial/lib/d3.geo.projection')
+// let geo = require('d3-celestial/lib/d3.geo.projection')
 
 export default {
   name: 'App',
@@ -125,11 +131,14 @@ export default {
       }
     }
   },
+  destroyed () {
+    window.removeEventListener('resize', this.setBounds)
+  },
   mounted () {
     // D3-Celestial Properties different from default
 
     let baseScale
-    let scale
+    // let scale
 
     Celestial = window.Celestial
     Celestial.add({
@@ -155,7 +164,7 @@ export default {
         this.date = date.toLocaleDateString('ru-RU', options)
       },
       redraw: function () {
-        scale = window.Celestial.mapProjection.scale() / baseScale
+        var scale = window.Celestial.mapProjection.scale() / baseScale
       }
     })
 
@@ -163,8 +172,23 @@ export default {
     let canvasDiv = this.$refs.wrapper.children[0]
     canvasDiv.id = 'canvas'
     // const ctx = Celestial.context.canvas.getContext('2d')
+    this.setBounds()
+
+    window.addEventListener('resize', this.setBounds)
   },
   methods: {
+    setBounds () {
+      const prevRec = this.$refs.prev.getBoundingClientRect()
+      const img = document.getElementById('test')
+      const rec = img.getBoundingClientRect()
+
+      const cx = img.getAttribute('cx')
+      const r = img.getAttribute('r')
+
+      this.$refs.wrapper.style.top = `${rec.top - prevRec.top}px`
+      this.$refs.wrapper.style.left = `${rec.left - prevRec.left}px`
+      this.$refs.wrapper.style.width = `${rec.width}px`
+    },
     updateDesign (val) {
       this.design = val
     },
@@ -176,8 +200,8 @@ export default {
       this.showDate = val
     },
     updateText (obj) {
-      this.text1 = obj.text1,
-      this.text2 = obj.text2,
+      this.text1 = obj.text1
+      this.text2 = obj.text2
       this.text3 = obj.text3
     },
     check (data) {
@@ -206,6 +230,19 @@ export default {
 }
 </script>
 <style lang="scss">
+body{
+  margin: 0;
+}
+
+.st0{fill:none;stroke:#000000;stroke-width:0.5;stroke-miterlimit:10;}
+.st1{fill:#333;}
+.st2{font-family:'CenturySchlbkCyrillicBT-Bold';}
+.st3{font-size:22px;}
+.st4{font-family:'Candara-LightItalic';}
+.st5{font-size:12px;}
+.st6{font-family:'Affect-Light';}
+.st7{font-size:11px;}
+
 @font-face {
     font-family: 'CentSchbkCyrill';
     src: url('./assets/fonts/tt6806m.eot');
@@ -225,25 +262,29 @@ export default {
          url('./assets/fonts/tt6805m.ttf') format('truetype'),
          url('./assets/fonts/tt6805m.svg#tt6806m') format('svg');
 }
+
+canvas {
+  // visibility: hidden;
+}
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  // margin-top: 60px;
 }
 
 #celestial-map {
   display: block;
   height: auto !important;
   width: 80%;
-  margin: 1.5em auto 0 auto;
+  margin: 0;
   border-radius: 50%;
   overflow: hidden;
   // background: #000;
-  border: 2px solid #fff;
-  position: relative;
+  // border: 2px solid #fff;
+  position: absolute;
 
   &.heart {
     border:none;
@@ -254,7 +295,7 @@ export default {
 #celestial-map canvas {
   width: 100%;
   height: auto;
-  transform: scale(1.03) translateY(2px)
+  transform: scale(1.02)
 }
 
 #canvas {
@@ -262,7 +303,10 @@ export default {
     display: none;
   }
 }
-
+.map-container2 {
+  width: 100%;
+  min-height: 700px;
+}
 .heart {
   display: block !important;
   position: absolute;
@@ -299,7 +343,7 @@ export default {
 .container {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  // align-items: center;
   justify-content: space-between;
   max-width: 1140px;
   position: relative;
@@ -308,23 +352,21 @@ export default {
   margin-left: auto;
 }
 #preview {
-  background-color: #333;
+  // background-color: #333;
   overflow: hidden;
   height: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: top;
   background-repeat: no-repeat;
   width: 49%;
   flex-direction: column;
   &.navy {
     background: #381074;
-    #celestial-map {
-    }
   }
   &.rose {
     background: #FFF;
-    border: 2px solid #000;
+    // border: 2px solid #000;
     #celestial-map {
       background: linear-gradient(120deg, rgba(56,16,116,1) 0%, rgba(225,151,191,1) 100%);
     }
