@@ -18,7 +18,7 @@ const data = {
         picture:
           'https://www.pichshop.ru/upload/iblock/902/902aebe24918c0e8f21d880eee0630a2.png',
         stencil:
-          'https://www.pichshop.ru/upload/iblock/31f/31ffd83c93c213cbaf5f5722bc6b661d.png',
+          '<svg version="1.1" id="Слой_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 841.89 1190.55" style="enable-background:new 0 0 841.89 1190.55;" xml:space="preserve"><rect x="27.74" y="28.81" class="st0" width="786.49" height="1135.14"/><circle id="test" class="st1" cx="420.98" cy="462.93" r="321.43"/><text transform="matrix(1 0 0 1 364.2654 952.5249)" class="st2 st3">В этот день звезды решили за нас</text><text transform="matrix(1 0 0 1 383.0738 977.192)" class="st4 st5">я знаю, что такое любовь, благодаря тебе</text><text transform="matrix(1 0 0 1 408.4772 1120.583)" class="st6 st7" >asdasdas</text><text transform="matrix(1 0 0 1 406.4477 1136.4147)" class="st6 st7">Россия, Москва</text></svg>',
         background: { colors: ['#381074', '#e197bf'], deg: '120' },
         stars: { colors: ['#fff'], deg: '' }
       }

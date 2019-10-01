@@ -1,152 +1,144 @@
 <template>
-  <div id="control-panel">
-    <h1 class="product-page_title" itemprop="name">
-      Карта звездного неба
-    </h1>
+   <div class="container">
+      <Preview
+        :data="data"
+        :location="control.location"
+      />
 
-    <div class="product-page_variants">
-      <div class="product-page_variants_block other">
-        <div class="name design">Выберите дизайн</div>
-        <div class="input_wrap">
-          <label v-for="style in styles" :key="style.id" :title="style.name">
-            <input type="radio" name="color" :value="style.id" v-model="design">
-            <span><img :src=style.picture alt=""></span>
-          </label>
-        </div>
+    <div id="control-panel">
+      <h1 class="product-page_title" itemprop="name">
+        Карта звездного неба
+      </h1>
 
-      </div>
-    </div>
-
-    <div class="product-page_variants">
-      <div class="product-page_variants_block other">
-        <div class="name design">Выберите форму</div>
-        <div class="input_wrap">
-          <label>
-            <input type="button" v-on:click="setShape" value="heart">
-            <span>
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill-rule="evenodd" clip-rule="evenodd">
-                <path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402m5.726-20.583c-2.203 0-4.446 1.042-5.726 3.238-1.285-2.206-3.522-3.248-5.719-3.248-3.183 0-6.281 2.187-6.281 6.191 0 4.661 5.571 9.429 12 15.809 6.43-6.38 12-11.148 12-15.809 0-4.011-3.095-6.181-6.274-6.181"/>
-              </svg>
-            </span>
-          </label>
-        </div>
-      </div>
-    </div>
-
-    <div class="product-page_variants">
-      <div class="product-page_variants_block other">
-        <div class="name" style="margin-bottom: 15px;">Выберите ваш город</div>
-        <autocomplete
-          placeholder="Введите ваш город"
-          :source="endpoint"
-          results-property="features"
-          results-diplay="place_name"
-          :results-display="formattedDisplay"
-          @selected="addDistributionGroup"
-        ></autocomplete>
-      </div>
-    </div>
-
-    <div class="product-page_variants">
-      <div class="product-page_variants_block other">
-        <div class="name" style="margin-bottom: 15px;">Выберите размер</div>
-        <v-select :options="options" label="label" :reduce="value => value.value" v-model="size"></v-select>
-      </div>
-    </div>
-
-    <div class="date-wrap">
       <div class="product-page_variants">
-        <div class="product-page_variants_block other" v-show="!showDate">
-          <div class="name">Выберите дату события</div>
-          <div id="celestial-form">
-            <input type="text" title="datetime-hide" id="datetime1" >
+        <div class="product-page_variants_block other">
+          <div class="name design">Выберите дизайн</div>
+          <div class="input_wrap">
+            <label v-for="style in styles" :key="style.id" :title="style.name">
+              <input type="radio" name="color" :value="style.id" v-model="design">
+              <span><img :src=style.picture alt=""></span>
+            </label>
           </div>
-          <!-- <datepicker :value="date" :language="ru" @selected="setDate"></datepicker> -->
+
         </div>
       </div>
-      <label>
-        <input id="date_check" type="checkbox" name="date_check" v-model="showDate">
-          Не устанавливать дату на карту
-      </label>
-    </div>
 
-    <div class="product-page_price-wrap">
-      <div id="artPersonal">
-        <div class="art-div-reset art-div art-personalization" style="padding-top: 10px">
-          <div class="art-personalization-custom1">
-            <div class="art-h3 art-hdr">Персонализируйте подарок</div>
-            <div class="art-pers-fields">
-              <div class="art-pers-field">
-                <div class="art-field-name">
-                  <label for="pers_input1">Впишите ваше пожелание</label>:
+      <div class="product-page_variants">
+        <div class="product-page_variants_block other">
+          <div class="name" style="margin-bottom: 15px;">Выберите ваш город</div>
+          <autocomplete
+            placeholder="Введите ваш город"
+            :source="endpoint"
+            results-property="features"
+            results-diplay="place_name"
+            :results-display="formattedDisplay"
+            @selected="addDistributionGroup"
+          ></autocomplete>
+        </div>
+      </div>
+
+      <div class="product-page_variants">
+        <div class="product-page_variants_block other">
+          <div class="name" style="margin-bottom: 15px;">Выберите размер</div>
+          <v-select :options="options" label="label" :reduce="value => value.value" v-model="size"></v-select>
+        </div>
+      </div>
+
+      <div class="date-wrap">
+        <div class="product-page_variants">
+          <div class="product-page_variants_block other" v-show="!showDate">
+            <div class="name">Выберите дату события</div>
+            <div id="celestial-form">
+              <input type="text" title="datetime-hide" id="datetime1" >
+            </div>
+            <!-- <datepicker :value="date" :language="ru" @selected="setDate"></datepicker> -->
+          </div>
+        </div>
+        <label>
+          <input id="date_check" type="checkbox" name="date_check" v-model="showDate">
+            Не устанавливать дату на карту
+        </label>
+      </div>
+
+      <div class="product-page_price-wrap">
+        <div id="artPersonal">
+          <div class="art-div-reset art-div art-personalization" style="padding-top: 10px">
+            <div class="art-personalization-custom1">
+              <div class="art-h3 art-hdr">Персонализируйте подарок</div>
+              <div class="art-pers-fields">
+                <div class="art-pers-field">
+                  <div class="art-field-name">
+                    <label for="pers_input1">Впишите ваше пожелание</label>:
+                  </div>
+                  <div class="art-field-value">
+                    <input
+                      v-model="text1"
+                      v-on:keyup="textToParent"
+                      id="pers_input1"
+                      maxlength="40"
+                      class="art-order-field"
+                      name="perstext_1"
+                      placeholder="В этот день звезды решили за нас"
+                      value
+                      autocomplete="off"
+                      type="text"
+                    />
+                    <!-- <div class="art-input-maxsize">36</div> -->
+                  </div>
                 </div>
-                <div class="art-field-value">
-                  <input
-                    v-model="text1"
-                    v-on:keyup="textToParent"
-                    id="pers_input1"
-                    maxlength="40"
-                    class="art-order-field"
-                    name="perstext_1"
-                    placeholder="В этот день звезды решили за нас"
-                    value
-                    autocomplete="off"
-                    type="text"
-                  />
-                  <!-- <div class="art-input-maxsize">36</div> -->
+                <div class="art-pers-field">
+                  <div class="art-field-name">
+                    <label for="pers_input2">Впишите ваше пожелание</label>:
+                  </div>
+                  <div class="art-field-value">
+                    <input
+                      v-model="text2"
+                      v-on:keyup="textToParent"
+                      id="pers_input2"
+                      maxlength="45"
+                      class="art-order-field"
+                      name="perstext_2"
+                      placeholder="я знаю, что такое любовь, благодаря тебе"
+                      value
+                      autocomplete="off"
+                      type="text"
+                    />
+                    <!-- <div class="art-input-maxsize">41</div> -->
+                  </div>
                 </div>
-              </div>
-              <div class="art-pers-field">
-                <div class="art-field-name">
-                  <label for="pers_input2">Впишите ваше пожелание</label>:
-                </div>
-                <div class="art-field-value">
-                  <input
-                    v-model="text2"
-                    v-on:keyup="textToParent"
-                    id="pers_input2"
-                    maxlength="45"
-                    class="art-order-field"
-                    name="perstext_2"
-                    placeholder="я знаю, что такое любовь, благодаря тебе"
-                    value
-                    autocomplete="off"
-                    type="text"
-                  />
-                  <!-- <div class="art-input-maxsize">41</div> -->
-                </div>
-              </div>
-              <div class="art-pers-field">
-                <div class="art-field-name">
-                  <label for="pers_input3">Впишите ваш текст</label>:
-                </div>
-                <div class="art-field-value">
-                  <input
-                    v-model="text3"
-                    id="pers_input3"
-                    maxlength="20"
-                    class="art-order-field"
-                    name="perstext_3"
-                    placeholder="Россия, Москва"
-                    autocomplete="off"
-                    type="text"
-                  />
-                  <!-- <div class="art-input-maxsize">16</div> -->
+                <div class="art-pers-field">
+                  <div class="art-field-name">
+                    <label for="pers_input3">Впишите ваш текст</label>:
+                  </div>
+                  <div class="art-field-value">
+                    <input
+                      v-model="text3"
+                      id="pers_input3"
+                      maxlength="20"
+                      class="art-order-field"
+                      name="perstext_3"
+                      placeholder="Россия, Москва"
+                      autocomplete="off"
+                      type="text"
+                    />
+                    <!-- <div class="art-input-maxsize">16</div> -->
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="artsk-info">Срок доставки данного товара больше на 3-4 рабочих дня.</div>
-    <div>
-      <button class="product-generate_btn" @click="sendData">Создать карту</button>
-      <button class="js-btn_add product-page_in-cart_notactive">
-        <span></span>
-        <p>В корзину</p>
-      </button>
+      <div class="artsk-info">Срок доставки данного товара больше на 3-4 рабочих дня.</div>
+      <div>
+        <button class="product-generate_btn" @click="sendData">Создать карту</button>
+        <button class="js-btn_add product-page_in-cart_notactive">
+          <span></span>
+          <p>В корзину</p>
+        </button>
+      </div>
+
     </div>
 
   </div>
@@ -156,7 +148,9 @@ import Autocomplete from 'vuejs-auto-complete'
 // import Datepicker from 'vuejs-datepicker'
 import vSelect from 'vue-select'
 import 'vue-select/dist/vue-select.css'
-// import axios from 'axios'
+
+import Preview from './Preview'
+
 import AjaxService from '../services/AjaxService'
 import Apiservice from '../services/ApiService'
 
@@ -164,39 +158,15 @@ export default {
   name: 'ControlPanel',
   components: {
     Autocomplete,
-    vSelect
-    // Datepicker
+    vSelect,
+    Preview
   },
+
+  props: ['datetime', 'data'],
 
   data: function () {
     return {
       options: [],
-      // options: [
-      //   {
-      //     label: 'А3 (42 х 29,7 см) - 990 рублей',
-      //     value: 698881
-      //   },
-      //   {
-      //     label: 'A2 (59,5 х 42 см) - 1490 рублей',
-      //     value: 898880
-      //   },
-      //   {
-      //     label: 'А3 с черной рамкой - 1990 рублей',
-      //     value: 714217
-      //   },
-      //   {
-      //     label: 'А3 с белой рамкой - 1990 рублей',
-      //     value: 714229
-      //   },
-      //   {
-      //     label: 'A2 с черной рамкой - 2590 рублей',
-      //     value: 714218
-      //   },
-      //   {
-      //     label: 'A2 с белой рамкой - 2590 рублей',
-      //     value: 714228
-      //   }
-      // ],
       showDate: false,
       address: '',
       place_name: '',
@@ -209,10 +179,13 @@ export default {
       // date: '',
       text1: 'В этот день звезды решили за нас',
       text2: 'я знаю, что такое любовь, благодаря тебе',
-      text3: 'Россия, Москва'
+      text3: 'Россия, Москва',
+      control: {
+        location: null
+      }
     }
   },
-  props: ['datetime'],
+
   mounted () {
     // this.size = this.options[0].value
     this.styles = Apiservice.getStyles()
@@ -287,7 +260,8 @@ export default {
       this.place_name = place_name
       this.address = center
       this.text3 = rest.text
-      this.$emit('updateLocation', [this.address[0], this.address[1]])
+      this.control.location = [this.address[0], this.address[1]]
+      //this.$emit('updateLocation', ])
     },
     getAddressData (addressData, placeResultData, id) {
       this.address = addressData
@@ -357,6 +331,8 @@ export default {
   }
 }
 </script>
+
+
 <style>
 #control-panel {
   text-align: left;

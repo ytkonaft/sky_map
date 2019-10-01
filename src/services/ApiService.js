@@ -3,7 +3,7 @@ import AjaxService from './AjaxService'
 
 class ApiService {
   constructor () {
-    AjaxService.makeGetRequest('get')
+    /*AjaxService.makeGetRequest('get')
       .then(response => {
         console.log(response.data)
         if (response.data.success === 'true') {
@@ -11,25 +11,29 @@ class ApiService {
       })
       .catch(error => {
         console.log(error)
-      })
+      })*/
 
-    this.apiOptions = testData.data
+    this.data = testData.data
+  }
+
+  getData () {
+    return this.data
   }
 
   getStyles () {
-    return this.apiOptions.styles
+    return this.data.styles
   }
 
   getPrices () {
-    return this.apiOptions.prices
+    return this.data.prices
   }
 
   getBorders () {
-    return this.apiOptions.borders
+    return this.data.borders
   }
 
   getSizes () {
-    return this.apiOptions.sizes
+    return this.data.sizes
   }
 }
 
