@@ -1,6 +1,16 @@
 <template>
   <div class="container">
-    <Preview :data="data" :location="control.location" :printSize="size.size" />
+    <Preview
+      :data="data"
+      :location="control.location"
+      :printSize="size.size"
+      :design="design"
+      :showDate="control.showDate"
+      :date="control.date"
+      :place="control.place"
+      :main_text="control.main_text"
+      :secondary_text="control.secondary_text"
+    />
 
     <div id="control-panel">
       <h1 class="product-page_title" itemprop="name">Карта звездного неба</h1>
@@ -10,7 +20,7 @@
           <div class="name design">Выберите дизайн</div>
           <div class="input_wrap">
             <label v-for="style in styles" :key="style.id" :title="style.name">
-              <input type="radio" name="color" :value="style.id" v-model="design" />
+              <input type="radio" name="color" :value="style" v-model="design" />
               <span>
                 <img :src="style.picture" alt />
               </span>
@@ -42,7 +52,7 @@
 
       <div class="date-wrap">
         <div class="product-page_variants">
-          <div class="product-page_variants_block other" v-show="!showDate">
+          <div class="product-page_variants_block other" v-show="!control.showDate">
             <div class="name">Выберите дату события</div>
             <div id="celestial-form">
               <input type="text" title="datetime-hide" id="datetime1" />
@@ -51,7 +61,7 @@
           </div>
         </div>
         <label>
-          <input id="date_check" type="checkbox" name="date_check" v-model="showDate" />
+          <input id="date_check" type="checkbox" name="date_check" v-model="control.showDate" />
           Не устанавливать дату на карту
         </label>
       </div>
@@ -68,8 +78,7 @@
                   </div>
                   <div class="art-field-value">
                     <input
-                      v-model="text1"
-                      v-on:keyup="textToParent"
+                      v-model="control.main_text"
                       id="pers_input1"
                       maxlength="40"
                       class="art-order-field"
@@ -88,8 +97,7 @@
                   </div>
                   <div class="art-field-value">
                     <input
-                      v-model="text2"
-                      v-on:keyup="textToParent"
+                      v-model="control.secondary_text"
                       id="pers_input2"
                       maxlength="45"
                       class="art-order-field"
@@ -108,7 +116,7 @@
                   </div>
                   <div class="art-field-value">
                     <input
-                      v-model="text3"
+                      v-model="control.place"
                       id="pers_input3"
                       maxlength="20"
                       class="art-order-field"
@@ -161,30 +169,36 @@ export default {
   data: function() {
     return {
       options: [],
-      showDate: false,
+
       address: "",
       place_name: "",
+      place: "",
       size: "",
       image: "",
       design: "",
       shape: "",
+
       styles: null,
-      config: "",
-      // date: '',
-      text1: "В этот день звезды решили за нас",
-      text2: "я знаю, что такое любовь, благодаря тебе",
-      text3: "Россия, Москва",
+
       control: {
-        location: null
+        location: null,
+        showDate: false,
+        date: '',
+        place: "Россия, Москва",
+        main_text: "В этот день звезды решили за нас",
+        secondary_text: "я знаю, что такое любовь, благодаря тебе",
       }
     };
   },
 
   mounted() {
-    this.styles = Apiservice.getStyles();
-    this.apiBorders = Apiservice.getBorders();
-    this.apiSizes = Apiservice.getSizes();
-    this.prices = Apiservice.getPrices();
+    this.styles = Apiservice.getStyles()
+    this.apiBorders = Apiservice.getBorders()
+    this.apiSizes = Apiservice.getSizes()
+    this.prices = Apiservice.getPrices()
+
+    this.design = this.styles[0]
+
     const sizesMap = this.prices.map(({ size, border, price }) => {
       const sizeName = this.sizes[size]["name"];
       const name = `${sizeName} + ${
@@ -198,6 +212,7 @@ export default {
     this.options = sizesMap;
     this.size = sizesMap[0];
   },
+
   computed: {
     borders() {
       return this.getParamsById(this.apiBorders);
@@ -206,38 +221,9 @@ export default {
       return this.getParamsById(this.apiSizes);
     }
   },
-  watch: {
-    design(val) {
-      this.$emit("changeDesign", this.design);
-    },
-    shape(val) {
-      this.$emit("changeShape", this.shape);
-    },
-    text1() {
-      this.textToParent();
-    },
-    text2() {
-      this.textToParent();
-    },
-    text3() {
-      this.textToParent();
-    },
-    date(val) {
-      console.log("ttt");
-      this.$emit("changeDate", this.date);
-    },
-    showDate(val) {
-      this.$emit("toggleShowDate", val);
-    }
-  },
+
   methods: {
-    setShape(e) {
-      if (this.shape !== "") {
-        this.shape = "";
-      } else {
-        this.shape = e.srcElement.value;
-      }
-    },
+
     getParamsById(paramsArray) {
       const params = {};
       paramsArray.forEach(param => {
@@ -245,6 +231,7 @@ export default {
       });
       return params;
     },
+
     endpoint(input) {
       return (
         "https://api.mapbox.com/geocoding/v5/mapbox.places/" +
@@ -252,13 +239,15 @@ export default {
         ".json?types=place&language=ru&access_token=pk.eyJ1IjoibWFrc2ltOTg5IiwiYSI6ImNqeDY0OXZrbzA4Nnk0ZHF1bG9ybmxvNGsifQ.-OcDOS1w1vyn8poaNOtsDg"
       );
     },
+
     formattedDisplay(result) {
       return result.place_name;
     },
+
     addDistributionGroup({ selectedObject: { place_name, center, ...rest } }) {
       this.place_name = place_name;
       this.address = center;
-      this.text3 = rest.text;
+      this.place = rest.text;
       this.control.location = [this.address[0], this.address[1]];
       //this.$emit('updateLocation', ])
     },
@@ -270,10 +259,7 @@ export default {
     //   this.date = date
     //   this.$emit('updateDate', date)
     // },
-    textToParent() {
-      const { text1, text2, text3 } = this;
-      this.$emit("inputChange", { text1, text2, text3 });
-    },
+
     b64toBlob(b64Data, contentType, sliceSize) {
       contentType = contentType || "";
       sliceSize = sliceSize || 512;
@@ -310,7 +296,7 @@ export default {
 
       const blob = this.b64toBlob(realData, contentType);
 
-      const formData = new FormData();
+      /*const formData = new FormData();
       formData.append("design", this.design);
       formData.append("place_name", this.place_name);
       formData.append("date", this.datetime);
@@ -329,7 +315,7 @@ export default {
         })
         .catch(error => {
           console.log(error);
-        });
+        });*/
     }
   }
 };

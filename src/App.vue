@@ -34,28 +34,6 @@ body{
   margin: 0;
 }
 
-.st0{fill:none;stroke:#000000;stroke-width:0.5;stroke-miterlimit:10;}
-.st1{fill:#333;}
-
-.st2 {
-  font-family: 'CenturySchlbkCyrillicBT-Bold';
-  transform: matrix(1, 0, 0, 1, 244.265, 952.525);
-}
-.st3{font-size:22px;}
-
-.st4 {
-  font-family:'Candara-LightItalic';
-  transform: matrix(1, 0, 0, 1, 344.074, 977.192);
-}
-
-.st5{font-size:12px;}
-
-.st6 {
-  font-family:'Affect-Light';
-}
-
-.st7{font-size:11px;}
-
 @font-face {
   font-family: 'CenturySchlbkCyrillicBT-Bold';
   src: url('./assets/fonts/CenturySchlbkCyrillicBTBoldCentSchbkCyrillBTBold.eot');

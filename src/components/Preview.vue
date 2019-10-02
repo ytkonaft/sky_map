@@ -1,6 +1,8 @@
 <template>
   <div id="preview" :class="previewClass" ref="prev">
-    <div id="celestial-map" :class="dynamicComponent" ref="wrapper"></div>
+    <div id="celestial-map" ref="wrapper">
+
+    </div>
     <img :src="image" class="preview-img" />
     <!-- <div class="frame">
       <div id="labels" class="caption">
@@ -11,7 +13,7 @@
           <div class="city">{{ text3 }}</div>
       </div>
     </div>-->
-    <div class="map-container2" v-html="preview"></div>
+    <div class="map-container2" id="stencil" v-html="stencil"></div>
   </div>
 </template>
 
@@ -24,18 +26,12 @@ import ApiService from "../services/ApiService";
 
 export default {
   name: "Preview",
-  props: ["data", "location", "printSize"],
+  props: ["data", "location", "printSize", "design", "showDate", "date", "place", "main_text", "secondary_text"],
 
   data: function() {
     return {
-      text1: "В этот день звезды решили за нас",
-      text2: "я знаю, что такое любовь, благодаря тебе",
-      text3: "Россия, Москва",
-      showDate: false,
-      date: "",
       image: "",
-      design: "",
-      shape: "",
+      wasSet: false,
 
       config: {
         width: 3000,
@@ -62,7 +58,7 @@ export default {
           names: false,
           style: { fill: "#fff", opacity: 1 },
           limit: 50,
-          size: 15
+          size: 25
         },
         constellations: {
           show: true,
@@ -73,7 +69,7 @@ export default {
             baseline: "middle",
             opacity: 1
           },
-          linestyle: { stroke: "#999", width: 4.5, opacity: 1 }
+          linestyle: { stroke: "#999", width: 6, opacity: 1 }
         },
         dsos: { show: false },
         mw: { show: false },
@@ -82,7 +78,7 @@ export default {
           equatorial: {
             show: false,
             stroke: "#aaaaaa",
-            width: 1.3,
+            width: 1.5,
             opacity: 0.7
           },
           ecliptic: {
@@ -111,8 +107,39 @@ export default {
   watch: {
     location(newVal, oldVal) {
       this.config.center = newVal;
-
       this.updateCenter(newVal);
+    },
+    showDate(newVal, oldVal) {
+      this.showDate = newVal
+      console.log(this.showDate)
+    },
+    date(newVal, oldVal) {
+      this.date = newVal
+      document.getElementById("date_string").innerHTML = newVal
+      console.log(this.date)
+    },
+    place(newVal, oldVal) {
+      this.place = newVal
+      document.getElementById("place_string").innerHTML = newVal
+      console.log(this.place)
+    },
+    main_text(newVal, oldVal) {
+      this.main_text = newVal
+      document.getElementById("main_text_string").innerHTML = newVal
+      console.log(this.main_text)
+    },
+    secondary_text(newVal, oldVal) {
+      this.secondary_text = newVal
+      document.getElementById("secondary_text_string").innerHTML = newVal
+      console.log(this.secondary_text)
+    },
+
+
+    design(newVal, oldVal) {
+      this.design = newVal
+      this.wasSet = true
+
+      this.drawSky();
     }
   },
 
@@ -127,33 +154,33 @@ export default {
           return "";
       }
     },
+
     totalClass() {
-      switch (this.design) {
+      switch (this.design.id) {
         case "725449":
           return "rose";
         case "725448":
-          return "navy";
+          return "";
         default:
           return "";
       }
     },
+
     previewClass() {
-      return [this.sizeClass].join(" ");
+      return [this.sizeClass, this.totalClass].join(" ");
     },
 
-    dynamicComponent() {
-      switch (this.shape) {
-        case "heart":
-          return "heart";
-        default:
-          return "";
+    stencil() {
+      let styles = ApiService.getStyles()
+
+      if (this.design.stencil == styles[0].stencil){
+        //одинаковые
+        console.log(this.design.stencil)
+        console.log(styles[0].stencil)
       }
-    },
 
-    preview() {
-      let styles = ApiService.getStyles();
-      console.log(styles);
-      return styles[1].stencil;
+      return !this.wasSet ? styles[0].stencil : this.design.stencil
+      //return this.design.stencil
     }
   },
 
@@ -162,17 +189,20 @@ export default {
   },
 
   mounted() {
-    this.drawSky();
+    //this.drawSky();
   },
 
   methods: {
     setBounds() {
       const prevRec = this.$refs.prev.getBoundingClientRect();
-      const img = document.getElementById("test");
-      const rec = img.getBoundingClientRect();
+      const shape = document.getElementById("figure");
+      console.log(shape)
 
-      const cx = img.getAttribute("cx");
-      const r = img.getAttribute("r");
+      const rec = shape.getBoundingClientRect();
+      const cx = shape.getAttribute("cx");
+      const r = shape.getAttribute("r");
+
+      console.log(shape.getBoundingClientRect());
 
       this.$refs.wrapper.style.top = `${rec.top - prevRec.top}px`;
       this.$refs.wrapper.style.left = `${rec.left - prevRec.left}px`;
@@ -181,10 +211,6 @@ export default {
 
     updateDesign(val) {
       this.design = val;
-    },
-
-    updateShape(val) {
-      this.shape = val;
     },
 
     updateShowDate(val) {
@@ -227,7 +253,7 @@ export default {
     drawSky() {
       // D3-Celestial Properties different from default
 
-      let baseScale;
+      let baseScale
 
       let Celestial = window.Celestial;
 
