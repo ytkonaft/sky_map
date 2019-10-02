@@ -1,8 +1,6 @@
 <template>
   <div id="preview" :class="previewClass" ref="prev">
-    <div id="celestial-map" ref="wrapper">
-
-    </div>
+    <div id="celestial-map" ref="wrapper"></div>
     <img :src="image" class="preview-img" />
     <!-- <div class="frame">
       <div id="labels" class="caption">
@@ -26,7 +24,17 @@ import ApiService from "../services/ApiService";
 
 export default {
   name: "Preview",
-  props: ["data", "location", "printSize", "design", "showDate", "date", "place", "main_text", "secondary_text"],
+  props: [
+    "data",
+    "location",
+    "printSize",
+    "design",
+    "showDate",
+    "date",
+    "place",
+    "main_text",
+    "secondary_text"
+  ],
 
   data: function() {
     return {
@@ -110,34 +118,32 @@ export default {
       this.updateCenter(newVal);
     },
     showDate(newVal, oldVal) {
-      this.showDate = newVal
-      console.log(this.showDate)
+      this.showDate = newVal;
+      // console.log(this.showDate);
     },
     date(newVal, oldVal) {
-      this.date = newVal
-      document.getElementById("date_string").innerHTML = newVal
-      console.log(this.date)
+      this.date = newVal;
+      this.updateTextNode("date_string", newVal);
+      // console.log(this.date);
     },
     place(newVal, oldVal) {
-      this.place = newVal
-      document.getElementById("place_string").innerHTML = newVal
-      console.log(this.place)
+      this.place = newVal;
+      this.updateTextNode("place_string", newVal);
+      // console.log(this.place);
     },
     main_text(newVal, oldVal) {
-      this.main_text = newVal
-      document.getElementById("main_text_string").innerHTML = newVal
-      console.log(this.main_text)
+      this.main_text = newVal;
+      this.updateTextNode("main_text_string", newVal);
+      // console.log(this.main_text);
     },
     secondary_text(newVal, oldVal) {
-      this.secondary_text = newVal
-      document.getElementById("secondary_text_string").innerHTML = newVal
-      console.log(this.secondary_text)
+      this.secondary_text = newVal;
+      this.updateTextNode("secondary_text_string", newVal);
+      // console.log(this.secondary_text);
     },
-
-
     design(newVal, oldVal) {
-      this.design = newVal
-      this.wasSet = true
+      this.design = newVal;
+      this.wasSet = true;
 
       this.drawSky();
     }
@@ -171,15 +177,15 @@ export default {
     },
 
     stencil() {
-      let styles = ApiService.getStyles()
+      let styles = ApiService.getStyles();
 
-      if (this.design.stencil == styles[0].stencil){
+      if (this.design.stencil == styles[0].stencil) {
         //одинаковые
-        console.log(this.design.stencil)
-        console.log(styles[0].stencil)
+        // console.log(this.design.stencil);
+        // console.log(styles[0].stencil);
       }
 
-      return !this.wasSet ? styles[0].stencil : this.design.stencil
+      return !this.wasSet ? styles[0].stencil : this.design.stencil;
       //return this.design.stencil
     }
   },
@@ -193,16 +199,39 @@ export default {
   },
 
   methods: {
+    updateTextNode(id, newVal) {
+      const textNode = document.getElementById(id);
+      textNode.innerHTML = newVal;
+      this.textAlignCenter(textNode);
+    },
+    textAlignCenter(node) {
+      const prevRec = this.$refs.prev.getBoundingClientRect();
+      // const prevRec = document.getElementById("Слой_1").getBoundingClientRect();
+      const nodeRec = node.getBoundingClientRect();
+      const transformVal = node.getAttribute("transform");
+      if (transformVal.includes("matrix")) {
+        const matrixArr = transformVal.split(" ");
+        console.log(prevRec.width);
+        console.log(prevRec.width);
+        const previewHalf = prevRec.width / 2;
+        const nodeHalf = nodeRec.width / 2;
+        matrixArr[4] = previewHalf - nodeHalf;
+        const newMatrix = matrixArr.join(" ");
+        node.setAttribute("transform", newMatrix);
+      }
+      console.log(prevRec);
+      console.log(nodeRec);
+    },
     setBounds() {
       const prevRec = this.$refs.prev.getBoundingClientRect();
       const shape = document.getElementById("figure");
-      console.log(shape)
+      // console.log(shape);
 
       const rec = shape.getBoundingClientRect();
       const cx = shape.getAttribute("cx");
       const r = shape.getAttribute("r");
 
-      console.log(shape.getBoundingClientRect());
+      // console.log(shape.getBoundingClientRect());
 
       this.$refs.wrapper.style.top = `${rec.top - prevRec.top}px`;
       this.$refs.wrapper.style.left = `${rec.left - prevRec.left}px`;
@@ -214,7 +243,7 @@ export default {
     },
 
     updateShowDate(val) {
-      console.log(val);
+      // console.log(val);
       this.showDate = val;
     },
 
@@ -229,8 +258,8 @@ export default {
     },
 
     updateDate(date) {
-      console.log("aae");
-      console.log(date);
+      // console.log("aae");
+      // console.log(date);
       Celestial.date(date);
       this.config.daterange = date;
     },
@@ -238,22 +267,22 @@ export default {
     loadSVG() {
       console.log(window.Celestial.container.selectAll());
       // console.log(window.Celestial)
-      console.log(this.config.geopos);
-      console.log(this.address);
+      // console.log(this.config.geopos);
+      // console.log(this.address);
       if (this.address !== "") {
         this.config.geopos = this.address;
         window.Celestial.apply(this.config);
       }
 
       var image = window.Celestial.context.canvas.toDataURL("image/png");
-      console.log(image);
+      // console.log(image);
       this.image = image;
     },
 
     drawSky() {
       // D3-Celestial Properties different from default
 
-      let baseScale
+      let baseScale;
 
       let Celestial = window.Celestial;
 
