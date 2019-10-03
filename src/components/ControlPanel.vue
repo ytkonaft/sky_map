@@ -7,7 +7,7 @@
         <div class="name design">Выберите дизайн</div>
         <div class="input_wrap">
           <label v-for="(style, idx) in styles" :key="style.id" :title="style.name">
-            <input type="radio" name="color" :value="idx" @click="setDesign(style)" v-model="design" />
+            <input type="radio" name="color" :value="idx" :checked="(style.id=design.id)" @click="setDesign(style)" v-model="design" />
             <span>
               <img :src="style.picture" alt />
             </span>
@@ -208,15 +208,6 @@ export default {
       this.$emit('locationChanged', location);
     },
 
-/*
-      @designChanged="updateDesign"
-      @locationChanged="updateLocation"
-      @hideDateChanged="updatehideDate"
-      @placeTextChanged="updatePlaceString"
-      @mainTextChanged="updateMainText"
-      @secondaryTextChanged="updateSecondaryText"
-*/
-
     endpoint(input) {
       return (
         "https://api.mapbox.com/geocoding/v5/mapbox.places/" +
@@ -350,14 +341,12 @@ export default {
 .product-page_variants label span {
   display: block;
   width: 48px;
-  height: 48px;
-  border: 1px solid #e6e6e6;
+  /* border: 1px solid #e6e6e6;*/
 }
 .product-page_variants label img {
   /* width: auto !important; */
-  /* height: auto !important; */
+  height: auto !important;
   max-width: 48px;
-  max-height: 48px;
 }
 .product-page_variants label img {
   width: 100%;
@@ -366,7 +355,6 @@ export default {
 .product-page_variants label input:checked + span {
   border: 4px solid #f26522;
   width: 42px;
-  height: 42px;
 }
 /* city */
 .product-page_variants_block {

@@ -24,8 +24,8 @@ viewBox="0 0 841.89 1190.55" style="enable-background:new 0 0 841.89 1190.55;" x
        <rect class="st0" width="841.89" height="1190.55"/>
        <rect x="23.48" y="19.2" class="st1" width="797.84" height="1151.52"/>
        <circle id="figure" class="st2" cx="420.98" cy="462.93" r="321.43"/>
-       <text transform="matrix(1 0 0 1 402.7535 1114.1582)" class="st3 st4" id="date_string">date</text>
-       <text transform="matrix(1 0 0 1 399.801 1136.4147)" class="st3 st4" id="place_string">place</text>
+       <text transform="matrix(1 0 0 1 402.7535 1114.1582)" class="st3 st4" id="date_string" text-anchor="middle">date</text>
+       <text transform="matrix(1 0 0 1 399.801 1136.4147)" class="st3 st4" id="place_string" text-anchor="middle">place</text>
        <g>
          <path class="st0" d="M420.98,1045.21c-4.69,0-9.37,0-14.06,0c0-7.93,0-15.86,0-23.79c9.38,0,18.77,0,28.15,0c0,2.03,0,4.06,0,6.08
            c-0.04-0.28-0.07-0.56-0.12-0.84c-0.3-1.67-1.14-3.02-2.55-3.98c-1.52-1.04-3.22-1.41-5.04-1.15c-2.55,0.37-4.48,1.68-5.75,3.94
@@ -54,8 +54,8 @@ viewBox="0 0 841.89 1190.55" style="enable-background:new 0 0 841.89 1190.55;" x
            c-1.62-1.46-3.15-3-4.5-4.72c-0.93-1.18-1.77-2.42-2.4-3.79c-0.39-0.85-0.68-1.72-0.78-2.65c-0.16-1.53,0.11-2.95,1.08-4.19
            c0.74-0.95,1.73-1.54,2.86-1.89C412.4,1022.41,413.12,1022.32,414.09,1022.31z"/>
        </g>
-       <text transform="matrix(1 0 0 1 338.806 962.37)" class="st5 st6" id="secondary_text_string">secondary_text</text>
-       <text transform="matrix(1 0 0 1 335.8668 921.3998)" class="st7 st8" id="main_text_string">main_text</text>
+       <text transform="matrix(1 0 0 1 338.806 962.37)" class="st5 st6" id="secondary_text_string" text-anchor="middle">secondary_text</text>
+       <text transform="matrix(1 0 0 1 335.8668 921.3998)" class="st7 st8" id="main_text_string" text-anchor="middle">main_text</text>
        </svg>`,
         background: { colors: ["#381074", "#e197bf"], deg: "120" },
         stars: { colors: ["#fff"], deg: "" }
@@ -79,10 +79,10 @@ viewBox="0 0 841.89 1190.55" style="enable-background:new 0 0 841.89 1190.55;" x
        </style>
        <g id="текст">
          <rect class="st0" width="841.89" height="1190.55"/>
-         <text transform="matrix(1 0 0 1 400.6581 1088.7405)" class="st1 st2" id="date_string">date</text>
-         <text transform="matrix(1 0 0 1 397.8753 1116.5721)" class="st1 st2" id="place_string">place</text>
-         <text transform="matrix(1 0 0 1 338.8062 198.3125)" class="st1 st3" id="secondary_text_string">secondary_text</text>
-         <text transform="matrix(1 0 0 1 335.8672 157.3423)" class="st4 st5" id="main_text_string">main_text</text>
+         <text transform="matrix(1 0 0 1 400.6581 1088.7405)" class="st1 st2" id="date_string" text-anchor="middle">date</text>
+         <text transform="matrix(1 0 0 1 397.8753 1116.5721)" class="st1 st2" id="place_string" text-anchor="middle">place</text>
+         <text transform="matrix(1 0 0 1 338.8062 198.3125)" class="st1 st3" id="secondary_text_string" text-anchor="middle">secondary_text</text>
+         <text transform="matrix(1 0 0 1 335.8672 157.3423)" class="st4 st5" id="main_text_string" text-anchor="middle">main_text</text>
        </g>
        <g id="место_для_карты">
          <path id="figure" class="st6" d="M111.04,510.95c0-15.1,0-30.21,0-45.31c1.23-0.04,1.39-0.95,1.51-1.86c0.47-3.37,0.89-6.74,1.42-10.1
@@ -18960,8 +18960,8 @@ viewBox="0 0 841.89 1190.55" style="enable-background:new 0 0 841.89 1190.55;" x
        </g>
        <rect x="23.48" y="19.2" class="st0" width="797.84" height="1151.52"/>
        <circle class="st1" id="figure" cx="420.98" cy="462.93" r="321.43"/>
-       <text transform="matrix(1 0 0 1 402.7535 1114.1582)" class="st2 st3 st4">date</text>
-       <text transform="matrix(1 0 0 1 399.801 1136.4147)" class="st2 st3 st4">place</text>
+       <text transform="matrix(1 0 0 1 402.7535 1114.1582)" class="st2 st3 st4" id="date_string" text-anchor="middle">date</text>
+       <text transform="matrix(1 0 0 1 399.801 1136.4147)" class="st2 st3 st4" id="place_string" text-anchor="middle">place</text>
        <g>
          <path class="st2" d="M435.07,1028.42c-0.04,0.3-0.08,0.6-0.13,0.89c-0.18,0.97-0.52,1.89-0.95,2.77c-0.8,1.63-1.87,3.09-3.04,4.47
            c-1.68,1.97-3.57,3.74-5.56,5.4c-1.29,1.08-2.63,2.11-4.02,3.08c-0.1,0.07-0.22,0.12-0.34,0.18c-0.02,0-0.04,0-0.06,0
@@ -18976,8 +18976,8 @@ viewBox="0 0 841.89 1190.55" style="enable-background:new 0 0 841.89 1190.55;" x
            c-0.19,0.39-0.32,0.82-0.47,1.23c-0.11,0.29-0.43,0.4-0.64,0.19c-0.06-0.06-0.1-0.15-0.13-0.23c-0.28-0.87-0.69-1.68-1.27-2.39
            C418.11,1023.2,416.15,1022.39,414.09,1022.31z"/>
        </g>
-       <text transform="matrix(1 0 0 1 338.806 962.37)" class="st2 st5 st6">secondary_text</text>
-       <text transform="matrix(1 0 0 1 335.8668 921.3998)" class="st2 st7 st8">main_text</text>
+       <text transform="matrix(1 0 0 1 338.806 962.37)" class="st2 st5 st6" id="secondary_text_string" text-anchor="middle">secondary_text</text>
+       <text transform="matrix(1 0 0 1 335.8668 921.3998)" class="st2 st7 st8" id="main_text_string" text-anchor="middle">main_text</text>
        </svg>`,
         background: { colors: false, deg: "" },
         stars: { colors: ["#fff"], deg: "" }

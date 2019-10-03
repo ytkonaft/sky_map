@@ -28,9 +28,6 @@
 let Celestial = require("../libs/celestial.js")
 // let geo = require('d3-celestial/lib/d3.geo.projection')
 
-//import { parse } from 'postsvg'
-//import render from 'posthtml-render'
-
 import ControlPanel from "./ControlPanel"
 import ParamsMixin from "../mixins/ParamsMixin"
 
@@ -223,7 +220,6 @@ export default {
     updateTextNode(id, newVal) {
       const textNode = document.getElementById(id);
       textNode.innerHTML = newVal;
-      this.textAlignCenter(textNode);
     },
 
     updateDesign(value) {
@@ -250,46 +246,6 @@ export default {
     },
     updateSecondaryText(value) {
       this.preview.secondaryText = value
-    },
-
-    textAlignCenter(node) {
-      //const prevRec = this.$refs.prev.getBoundingClientRect();
-
-      const parentEl = document.getElementById("Слой_1");
-      const viewBox = parentEl.getAttribute("viewBox").split(" ");
-
-      const nodeEl = node.getBoundingClientRect();
-
-      const center = this.countCenter(viewBox[2], nodeEl.width);
-      console.log(center, 'center');
-
-
-
-
-      const prevRec = parentEl.getBoundingClientRect();
-      const nodeRec = node.getBoundingClientRect();
-      const transformVal = node.getAttribute("transform");
-
-      if (transformVal.includes("matrix")) {
-        const matrixArr = transformVal.split(" ");
-        console.log(prevRec.width, nodeRec.width);
-        console.log(matrixArr);
-
-        const previewHalf = prevRec.width / 2;
-        const nodeHalf = nodeRec.width / 2;
-
-        matrixArr[4] = previewHalf - nodeHalf;
-
-        const newMatrix = matrixArr.join(" ");
-        node.setAttribute("transform", newMatrix);
-      }
-
-      console.log(prevRec);
-      console.log(nodeRec);
-    },
-
-    countCenter(parentW, nodeW){
-      return  (parentW / 2) - (nodeW / 2);
     },
 
     setBounds() {
