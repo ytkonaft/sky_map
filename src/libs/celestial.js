@@ -1944,7 +1944,7 @@ import d3_geo_projection from './lib/d3.geo.projection'
     ])
 
   /* Default parameters for each supported projection
-     arg: constructor argument, if any 
+     arg: constructor argument, if any
      scale: scale parameter so that they all have ~equal width, normalized to 1024 pixels
      ratio: width/height ratio, 2.0 if none
      clip: projection clipped to 90 degrees from center, otherwise to antimeridian
@@ -2300,28 +2300,28 @@ canvas.text = function () {
     ctx.fillStyle = color;
     ctx.textAlign = align;
     ctx.textBaseline = baseline;
-    
+
     //var pt = projection(d.geometry.coordinates);
     if (angle) {
-      canvas.save();     
+      canvas.save();
       canvas.translate(aPos[0], aPos[1]);
-      canvas.rotate(angle); 
+      canvas.rotate(angle);
       canvas.fillText(sText, 0, 0);
-      canvas.restore();     
+      canvas.restore();
     } else
       canvas.fillText(sText, aPos[0], aPos[1]);
   }
-  
+
   txt.angle = function(x) {
     if (!arguments.length) return angle * 180 / Math.PI;
     color = x  * Math.PI / 180;
     return txt;
-  };  
+  };
   txt.color = function(s) {
     if (!arguments.length) return color;
     color = s;
     return txt;
-  };  
+  };
   txt.align = function(s) {
     if (!arguments.length) return align;
     align = s;
@@ -2352,8 +2352,8 @@ canvas.text = function () {
     if (o.fill) color = o.fill;
     if (o.font) font = o.font;
     return txt;
-  }; 
-  
+  };
+
 }
 
   function ctxPath(d) {
@@ -2369,20 +2369,20 @@ canvas.text = function () {
     }
     context.fill();
   }
-  
+
 
   function ctxText(d, ang) {
     var pt = projection(d.geometry.coordinates);
     if (ang) {
-      canvas.save();     
+      canvas.save();
       canvas.translate(pt[0], pt[1]);
-      canvas.rotate(Math.PI/2); 
+      canvas.rotate(Math.PI/2);
       canvas.fillText(txt, 0, 0);
-      canvas.restore();     
+      canvas.restore();
     } else
       canvas.fillText(d.properties.txt, pt[0], pt[1]);
   }
-  
+
 
 */
   function $(id) {
@@ -3773,7 +3773,7 @@ canvas.text = function () {
           s = tz < 0 ? ' +' : ' −'
         tzs = s + pad(h) + pad(m)
       }
-      return dtFormat(dt) 
+      return dtFormat(dt)
     }
 
     function isValidLocation(loc) {
@@ -3796,7 +3796,7 @@ canvas.text = function () {
       var dtc = new Date(date.valueOf() + (zone - tz) * 60000)
 
       Celestial.timechanged(date)
-      console.log(Celestial)
+
       cfg.horizon.show = !!$('horizon-show').checked
       cfg.planets.show = !!$('planets-show').checked
 
@@ -3924,13 +3924,13 @@ canvas.text = function () {
   /*
     ep = epoch (iso-date)
     N = longitude of the ascending node (deg) Ω
-    i = inclination to the refrence plane, default:ecliptic (deg) 
+    i = inclination to the refrence plane, default:ecliptic (deg)
     w = argument of periapsis (deg)  ω
     a = semi-major axis, or mean distance from parent body (AU,km)
     e = eccentricity (0=circle, 0-1=ellipse, 1=parabola, >1=hyperbola ) (-)
     M = mean anomaly (0 at periapsis; increases uniformly with time) (deg)
     n = mean daily motion = 360/P (deg/day)
-    
+
     W = N + w  = longitude of periapsis ϖ
     L = M + W  = mean longitude
     q = a*(1-e) = periapsis distance
@@ -3939,9 +3939,9 @@ canvas.text = function () {
     T = Epoch_of_M - (M(deg)/360_deg) / P  = time of periapsis
     v = true anomaly (angle between position and periapsis) ν
     E = eccentric anomaly
-    
+
     Mandatory: a, e, i, N, w|W, M|L, dM|n
-    
+
 */
 
   var Kepler = function() {

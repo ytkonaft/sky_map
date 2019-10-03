@@ -1,12 +1,12 @@
 <template>
   <div class="container">
     <Preview
-      :data="data"
+      :previewData="previewData"
       :location="control.location"
       :printSize="size.size"
       :design="design"
-      :showDate="control.showDate"
-      :date="control.date"
+      :hideDate="control.hideDate"
+
       :place="control.place"
       :main_text="control.main_text"
       :secondary_text="control.secondary_text"
@@ -52,12 +52,11 @@
 
       <div class="date-wrap">
         <div class="product-page_variants">
-          <div class="product-page_variants_block other" v-show="!control.showDate">
+          <div class="product-page_variants_block other" >
             <div class="name">Выберите дату события</div>
             <div id="celestial-form">
               <input type="text" title="datetime-hide" id="datetime1" />
             </div>
-            <!-- <datepicker :value="date" :language="ru" @selected="setDate"></datepicker> -->
           </div>
         </div>
         <label>
@@ -164,7 +163,7 @@ export default {
     Preview
   },
 
-  props: ["datetime", "data"],
+  props: ["previewData"],
 
   data: function() {
     return {
@@ -182,8 +181,8 @@ export default {
 
       control: {
         location: null,
-        showDate: false,
-        date: '',
+        hideDate: false,
+        //date: '',
         place: "Россия, Москва",
         main_text: "В этот день звезды решили за нас",
         secondary_text: "я знаю, что такое любовь, благодаря тебе",
@@ -198,6 +197,8 @@ export default {
     this.prices = Apiservice.getPrices()
 
     this.design = this.styles[0]
+
+    //this.control.date =
 
     const sizesMap = this.prices.map(({ size, border, price }) => {
       const sizeName = this.sizes[size]["name"];
@@ -247,18 +248,14 @@ export default {
     addDistributionGroup({ selectedObject: { place_name, center, ...rest } }) {
       this.place_name = place_name;
       this.address = center;
-      this.place = rest.text;
+      this.place = rest.text
+
       this.control.location = [this.address[0], this.address[1]];
-      //this.$emit('updateLocation', ])
     },
+
     getAddressData(addressData, placeResultData, id) {
       this.address = addressData;
     },
-    // setDate (date) {
-    //   console.log('a')
-    //   this.date = date
-    //   this.$emit('updateDate', date)
-    // },
 
     b64toBlob(b64Data, contentType, sliceSize) {
       contentType = contentType || "";
@@ -286,6 +283,7 @@ export default {
 
       return new Blob(byteArrays, { type: contentType });
     },
+
     sendData() {
       console.log("sending axios");
       const ImageURL = window.Celestial.context.canvas.toDataURL("image/png");

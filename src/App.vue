@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <ControlPanel
-        :data="previewData"
+        :previewData="previewData"
       />
   </div>
 </template>

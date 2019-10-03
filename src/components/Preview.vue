@@ -25,11 +25,11 @@ import ApiService from "../services/ApiService";
 export default {
   name: "Preview",
   props: [
-    "data",
+    "previewData",
     "location",
     "printSize",
     "design",
-    "showDate",
+    "hideDate",
     "date",
     "place",
     "main_text",
@@ -115,32 +115,36 @@ export default {
   watch: {
     location(newVal, oldVal) {
       this.config.center = newVal;
-      this.updateCenter(newVal);
+      this.rotateSky(newVal);
     },
-    showDate(newVal, oldVal) {
-      this.showDate = newVal;
-      // console.log(this.showDate);
+
+    hideDate(newVal, oldVal) {
+      console.log(window.Celestial.date, this.date)
+      if (newVal){
+        this.updateTextNode("date_string", '')
+      }else{
+        this.updateTextNode("date_string", this.date)
+      }
     },
+
     date(newVal, oldVal) {
-      this.date = newVal;
       this.updateTextNode("date_string", newVal);
-      // console.log(this.date);
+      console.log(this.date, 'updated');
     },
+
     place(newVal, oldVal) {
-      this.place = newVal;
       this.updateTextNode("place_string", newVal);
       // console.log(this.place);
     },
     main_text(newVal, oldVal) {
-      this.main_text = newVal;
       this.updateTextNode("main_text_string", newVal);
       // console.log(this.main_text);
     },
     secondary_text(newVal, oldVal) {
-      this.secondary_text = newVal;
       this.updateTextNode("secondary_text_string", newVal);
-      // console.log(this.secondary_text);
+      //console.log(this.secondary_text);
     },
+
     design(newVal, oldVal) {
       this.design = newVal;
       this.wasSet = true;
@@ -179,14 +183,7 @@ export default {
     stencil() {
       let styles = ApiService.getStyles();
 
-      if (this.design.stencil == styles[0].stencil) {
-        //одинаковые
-        // console.log(this.design.stencil);
-        // console.log(styles[0].stencil);
-      }
-
       return !this.wasSet ? styles[0].stencil : this.design.stencil;
-      //return this.design.stencil
     }
   },
 
@@ -195,6 +192,7 @@ export default {
   },
 
   mounted() {
+
     //this.drawSky();
   },
 
@@ -204,11 +202,13 @@ export default {
       textNode.innerHTML = newVal;
       this.textAlignCenter(textNode);
     },
+
     textAlignCenter(node) {
       const prevRec = this.$refs.prev.getBoundingClientRect();
       // const prevRec = document.getElementById("Слой_1").getBoundingClientRect();
       const nodeRec = node.getBoundingClientRect();
       const transformVal = node.getAttribute("transform");
+
       if (transformVal.includes("matrix")) {
         const matrixArr = transformVal.split(" ");
         console.log(prevRec.width);
@@ -219,9 +219,11 @@ export default {
         const newMatrix = matrixArr.join(" ");
         node.setAttribute("transform", newMatrix);
       }
+
       console.log(prevRec);
       console.log(nodeRec);
     },
+
     setBounds() {
       const prevRec = this.$refs.prev.getBoundingClientRect();
       const shape = document.getElementById("figure");
@@ -238,37 +240,16 @@ export default {
       this.$refs.wrapper.style.width = `${rec.width}px`;
     },
 
-    updateDesign(val) {
-      this.design = val;
-    },
-
-    updateShowDate(val) {
-      // console.log(val);
-      this.showDate = val;
-    },
-
-    updateText(obj) {
-      this.text1 = obj.text1;
-      this.text2 = obj.text2;
-      this.text3 = obj.text3;
-    },
-
-    updateCenter(data) {
-      window.Celestial.rotate({ center: [data[0], data[1], 0] });
-    },
-
-    updateDate(date) {
+    /*updateDate(date) {
       // console.log("aae");
       // console.log(date);
       Celestial.date(date);
       this.config.daterange = date;
-    },
+    },*/
 
     loadSVG() {
       console.log(window.Celestial.container.selectAll());
-      // console.log(window.Celestial)
-      // console.log(this.config.geopos);
-      // console.log(this.address);
+
       if (this.address !== "") {
         this.config.geopos = this.address;
         window.Celestial.apply(this.config);
@@ -277,6 +258,10 @@ export default {
       var image = window.Celestial.context.canvas.toDataURL("image/png");
       // console.log(image);
       this.image = image;
+    },
+
+    rotateSky(location) {
+      window.Celestial.rotate({ center: [location[0], location[1], 0] });
     },
 
     drawSky() {
@@ -301,6 +286,7 @@ export default {
         timechanged: date => {
           var options = { year: "numeric", month: "long", day: "numeric" };
           this.date = date.toLocaleDateString("ru-RU", options);
+          console.log(this.date, 'celestial');
         },
 
         redraw: function() {
