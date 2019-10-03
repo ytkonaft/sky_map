@@ -1,45 +1,70 @@
 <template>
-  <div id="preview" :class="previewClass" ref="prev">
-    <div id="celestial-map" ref="wrapper"></div>
-    <img :src="image" class="preview-img" />
-    <!-- <div class="frame">
-      <div id="labels" class="caption">
-          <div class="text1">{{ text1 }}</div>
-          <br>
-          <div class="country">{{ text2 }}</div>
-          <div class="city" v-show="!showDate">{{ date }}</div>
-          <div class="city">{{ text3 }}</div>
-      </div>
-    </div>-->
-    <div class="map-container2" id="stencil" v-html="stencil"></div>
+  <div class="container">
+    <div id="preview" :class="previewClass" ref="prev">
+      <div id="celestial-map" ref="wrapper"></div>
+      <img :src="image" class="preview-img" />
+
+      <div class="map-container2" id="stencil" v-html="stencil"></div>
+    </div>
+
+    <ControlPanel
+      :apiData="apiData"
+      :printSizes="printSizes"
+      :previewData="preview"
+
+      @designChanged="updateDesign"
+      @locationChanged="updateLocation"
+      @printSizeChanged="updatePrintSize"
+      @hideDateChanged="updateHideDate"
+      @placeTextChanged="updatePlaceText"
+      @mainTextChanged="updateMainText"
+      @secondaryTextChanged="updateSecondaryText"
+    />
   </div>
 </template>
 
 <script>
 // let Celestial = require('d3-celestial/celestial.js')
-let Celestial = require("../libs/celestial.js");
+let Celestial = require("../libs/celestial.js")
 // let geo = require('d3-celestial/lib/d3.geo.projection')
 
-import ApiService from "../services/ApiService";
+//import { parse } from 'postsvg'
+//import render from 'posthtml-render'
+
+import ControlPanel from "./ControlPanel"
+import ParamsMixin from "../mixins/ParamsMixin"
+
+import ApiService from "../services/ApiService"
 
 export default {
   name: "Preview",
+  components: {
+    ControlPanel
+  },
+  mixins: [ParamsMixin],
   props: [
-    "previewData",
-    "location",
-    "printSize",
-    "design",
-    "hideDate",
-    "date",
-    "place",
-    "main_text",
-    "secondary_text"
+    "apiData"
   ],
 
   data: function() {
     return {
       image: "",
+      printSizes: [],
       wasSet: false,
+      svgStencil: '',
+
+      preview: {
+        design: null,
+        printSize: null,
+
+        location: null,
+        hideDate: false,
+        date: '',
+
+        placeText: "Россия, Москва",
+        mainText: "В этот день звезды решили за нас",
+        secondaryText: "я знаю, что такое любовь, благодаря тебе",
+      },
 
       config: {
         width: 3000,
@@ -109,53 +134,57 @@ export default {
           }
         }
       }
-    };
-  },
-
-  watch: {
-    location(newVal, oldVal) {
-      this.config.center = newVal;
-      this.rotateSky(newVal);
-    },
-
-    hideDate(newVal, oldVal) {
-      console.log(window.Celestial.date, this.date)
-      if (newVal){
-        this.updateTextNode("date_string", '')
-      }else{
-        this.updateTextNode("date_string", this.date)
-      }
-    },
-
-    date(newVal, oldVal) {
-      this.updateTextNode("date_string", newVal);
-      console.log(this.date, 'updated');
-    },
-
-    place(newVal, oldVal) {
-      this.updateTextNode("place_string", newVal);
-      // console.log(this.place);
-    },
-    main_text(newVal, oldVal) {
-      this.updateTextNode("main_text_string", newVal);
-      // console.log(this.main_text);
-    },
-    secondary_text(newVal, oldVal) {
-      this.updateTextNode("secondary_text_string", newVal);
-      //console.log(this.secondary_text);
-    },
-
-    design(newVal, oldVal) {
-      this.design = newVal;
-      this.wasSet = true;
-
-      this.drawSky();
     }
   },
 
+  created() {
+    this.preview.design = this.apiData.styles[0]
+
+    let prices = this.apiData.prices
+
+    this.printSizes = this.getSizesList(prices, this.sizes, this.borders)
+    this.preview.printSize = this.printSizes[0]
+  },
+
+  mounted() {
+    this.drawSky();
+  },
+
+  watch: {
+    'preview.placeText': function (newVal, oldVal){
+      this.updateTextNode("place_string", newVal)
+    },
+    'preview.mainText': function (newVal, oldVal){
+      this.updateTextNode("main_text_string", newVal)
+    },
+    'preview.secondaryText': function (newVal, oldVal){
+      this.updateTextNode("secondary_text_string", newVal)
+    },
+    'preview.hideDate': function (newVal, oldVal){
+      let line = newVal ? '' : this.preview.date
+      this.updateTextNode("date_string", line)
+    },
+
+    /*stencil (newStencil, oldStencil){
+
+      let line = this.preview.hideDate ? '' : this.preview.date
+      this.updateTextNode("date_string", line)
+
+      this.updateTextNode("place_string", this.preview.placeText)
+      this.updateTextNode("main_text_string", this.preview.mainText)
+      this.updateTextNode("secondary_text_string", this.preview.secondaryText)
+
+      this.$forceUpdate()
+    }*/
+  },
+
   computed: {
+    parsedSvgStencil() {
+      return this.svgStencil ? parse(this.svgStencil) : null
+    },
+
     sizeClass() {
-      switch (this.printSize) {
+      switch (this.preview.printSize.size) {
         case "A2":
           return "a2-print-size";
         case "A3":
@@ -166,7 +195,7 @@ export default {
     },
 
     totalClass() {
-      switch (this.design.id) {
+      switch (this.preview.design.id) {
         case "725449":
           return "rose";
         case "725448":
@@ -182,18 +211,12 @@ export default {
 
     stencil() {
       let styles = ApiService.getStyles();
-
-      return !this.wasSet ? styles[0].stencil : this.design.stencil;
+      return !this.wasSet ? styles[0].stencil : this.preview.design.stencil;
     }
   },
 
   destroyed() {
     window.removeEventListener("resize", this.setBounds);
-  },
-
-  mounted() {
-
-    //this.drawSky();
   },
 
   methods: {
@@ -203,25 +226,70 @@ export default {
       this.textAlignCenter(textNode);
     },
 
+    updateDesign(value) {
+      this.wasSet = true
+      this.preview.design = value
+    },
+
+    updateLocation(value) {
+      this.config.center = value
+      this.rotateSky(value)
+    },
+    updatePrintSize(value) {
+      this.preview.printSize = value
+    },
+
+    updateHideDate(value) {
+      this.preview.hideDate = value
+    },
+    updatePlaceText(value) {
+      this.preview.placeText = value
+    },
+    updateMainText(value) {
+      this.preview.mainText = value;
+    },
+    updateSecondaryText(value) {
+      this.preview.secondaryText = value
+    },
+
     textAlignCenter(node) {
-      const prevRec = this.$refs.prev.getBoundingClientRect();
-      // const prevRec = document.getElementById("Слой_1").getBoundingClientRect();
+      //const prevRec = this.$refs.prev.getBoundingClientRect();
+
+      const parentEl = document.getElementById("Слой_1");
+      const viewBox = parentEl.getAttribute("viewBox").split(" ");
+
+      const nodeEl = node.getBoundingClientRect();
+
+      const center = this.countCenter(viewBox[2], nodeEl.width);
+      console.log(center, 'center');
+
+
+
+
+      const prevRec = parentEl.getBoundingClientRect();
       const nodeRec = node.getBoundingClientRect();
       const transformVal = node.getAttribute("transform");
 
       if (transformVal.includes("matrix")) {
         const matrixArr = transformVal.split(" ");
-        console.log(prevRec.width);
-        console.log(prevRec.width);
+        console.log(prevRec.width, nodeRec.width);
+        console.log(matrixArr);
+
         const previewHalf = prevRec.width / 2;
         const nodeHalf = nodeRec.width / 2;
+
         matrixArr[4] = previewHalf - nodeHalf;
+
         const newMatrix = matrixArr.join(" ");
         node.setAttribute("transform", newMatrix);
       }
 
       console.log(prevRec);
       console.log(nodeRec);
+    },
+
+    countCenter(parentW, nodeW){
+      return  (parentW / 2) - (nodeW / 2);
     },
 
     setBounds() {
@@ -239,13 +307,6 @@ export default {
       this.$refs.wrapper.style.left = `${rec.left - prevRec.left}px`;
       this.$refs.wrapper.style.width = `${rec.width}px`;
     },
-
-    /*updateDate(date) {
-      // console.log("aae");
-      // console.log(date);
-      Celestial.date(date);
-      this.config.daterange = date;
-    },*/
 
     loadSVG() {
       console.log(window.Celestial.container.selectAll());
@@ -266,7 +327,6 @@ export default {
 
     drawSky() {
       // D3-Celestial Properties different from default
-
       let baseScale;
 
       let Celestial = window.Celestial;
@@ -285,8 +345,7 @@ export default {
 
         timechanged: date => {
           var options = { year: "numeric", month: "long", day: "numeric" };
-          this.date = date.toLocaleDateString("ru-RU", options);
-          console.log(this.date, 'celestial');
+          this.preview.date = date.toLocaleDateString("ru-RU", options);
         },
 
         redraw: function() {

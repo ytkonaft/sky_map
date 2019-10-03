@@ -1,30 +1,30 @@
 <template>
   <div id="app">
-    <ControlPanel
-        :previewData="previewData"
+    <Preview
+        :apiData="apiData"
       />
   </div>
 </template>
 
 <script>
-import ControlPanel from './components/ControlPanel'
+import Preview from './components/Preview'
 
 import ApiService from './services/ApiService'
 
 export default {
   name: 'App',
   components: {
-    ControlPanel
+    Preview
   },
 
   data: function () {
     return {
-      previewData: null
+      apiData: null
     }
   },
 
   created () {
-    this.previewData = ApiService.getData()
+    this.apiData = ApiService.getData()
   },
 
 }
@@ -73,7 +73,7 @@ canvas {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  // margin-top: 60px;
+  background: #F0F4FB;
 }
 
 #celestial-map {
@@ -152,6 +152,7 @@ canvas {
   margin-right: auto;
   margin-left: auto;
 }
+
 #preview {
   // background-color: #333;
   overflow: hidden;

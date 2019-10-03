@@ -1,146 +1,132 @@
 <template>
-  <div class="container">
-    <Preview
-      :previewData="previewData"
-      :location="control.location"
-      :printSize="size.size"
-      :design="design"
-      :hideDate="control.hideDate"
+  <div id="control-panel">
+    <h1 class="product-page_title" itemprop="name">Карта звездного неба</h1>
 
-      :place="control.place"
-      :main_text="control.main_text"
-      :secondary_text="control.secondary_text"
-    />
+    <div class="product-page_variants">
+      <div class="product-page_variants_block other">
+        <div class="name design">Выберите дизайн</div>
+        <div class="input_wrap">
+          <label v-for="(style, idx) in styles" :key="style.id" :title="style.name">
+            <input type="radio" name="color" :value="idx" @click="setDesign(style)" v-model="design" />
+            <span>
+              <img :src="style.picture" alt />
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
 
-    <div id="control-panel">
-      <h1 class="product-page_title" itemprop="name">Карта звездного неба</h1>
+    <div class="product-page_variants">
+      <div class="product-page_variants_block other">
+        <div class="name" style="margin-bottom: 15px;">Выберите ваш город</div>
+        <autocomplete
+          placeholder="Введите ваш город"
+          :source="endpoint"
+          results-property="features"
+          results-diplay="place_name"
+          :results-display="formattedDisplay"
+          @selected="setDistributionGroup"
+        ></autocomplete>
+      </div>
+    </div>
 
+    <div class="product-page_variants">
+      <div class="product-page_variants_block other">
+        <div class="name" style="margin-bottom: 15px;">Выберите размер</div>
+        <v-select :options="printSizes" label="name" v-model="previewData.printSize"></v-select>
+      </div>
+    </div>
+
+    <div class="date-wrap">
       <div class="product-page_variants">
         <div class="product-page_variants_block other">
-          <div class="name design">Выберите дизайн</div>
-          <div class="input_wrap">
-            <label v-for="style in styles" :key="style.id" :title="style.name">
-              <input type="radio" name="color" :value="style" v-model="design" />
-              <span>
-                <img :src="style.picture" alt />
-              </span>
-            </label>
+          <div class="name">Выберите дату события</div>
+          <div id="celestial-form">
+            <input type="text" title="datetime-hide" id="datetime1" />
           </div>
         </div>
       </div>
+      <label>
+        <input id="date_check" type="checkbox" name="date_check" v-model="previewData.hideDate" />
+        Не устанавливать дату на карту
+      </label>
+    </div>
 
-      <div class="product-page_variants">
-        <div class="product-page_variants_block other">
-          <div class="name" style="margin-bottom: 15px;">Выберите ваш город</div>
-          <autocomplete
-            placeholder="Введите ваш город"
-            :source="endpoint"
-            results-property="features"
-            results-diplay="place_name"
-            :results-display="formattedDisplay"
-            @selected="addDistributionGroup"
-          ></autocomplete>
-        </div>
-      </div>
-
-      <div class="product-page_variants">
-        <div class="product-page_variants_block other">
-          <div class="name" style="margin-bottom: 15px;">Выберите размер</div>
-          <v-select :options="options" label="name" v-model="size"></v-select>
-        </div>
-      </div>
-
-      <div class="date-wrap">
-        <div class="product-page_variants">
-          <div class="product-page_variants_block other" >
-            <div class="name">Выберите дату события</div>
-            <div id="celestial-form">
-              <input type="text" title="datetime-hide" id="datetime1" />
-            </div>
-          </div>
-        </div>
-        <label>
-          <input id="date_check" type="checkbox" name="date_check" v-model="control.showDate" />
-          Не устанавливать дату на карту
-        </label>
-      </div>
-
-      <div class="product-page_price-wrap">
-        <div id="artPersonal">
-          <div class="art-div-reset art-div art-personalization" style="padding-top: 10px">
-            <div class="art-personalization-custom1">
-              <div class="art-h3 art-hdr">Персонализируйте подарок</div>
-              <div class="art-pers-fields">
-                <div class="art-pers-field">
-                  <div class="art-field-name">
-                    <label for="pers_input1">Впишите ваше пожелание</label>:
-                  </div>
-                  <div class="art-field-value">
-                    <input
-                      v-model="control.main_text"
-                      id="pers_input1"
-                      maxlength="40"
-                      class="art-order-field"
-                      name="perstext_1"
-                      placeholder="В этот день звезды решили за нас"
-                      value
-                      autocomplete="off"
-                      type="text"
-                    />
-                    <!-- <div class="art-input-maxsize">36</div> -->
-                  </div>
+    <div class="product-page_price-wrap">
+      <div id="artPersonal">
+        <div class="art-div-reset art-div art-personalization" style="padding-top: 10px">
+          <div class="art-personalization-custom1">
+            <div class="art-h3 art-hdr">Персонализируйте подарок</div>
+            <div class="art-pers-fields">
+              <div class="art-pers-field">
+                <div class="art-field-name">
+                  <label for="pers_input1">Впишите ваше пожелание</label>:
                 </div>
-                <div class="art-pers-field">
-                  <div class="art-field-name">
-                    <label for="pers_input2">Впишите ваше пожелание</label>:
-                  </div>
-                  <div class="art-field-value">
-                    <input
-                      v-model="control.secondary_text"
-                      id="pers_input2"
-                      maxlength="45"
-                      class="art-order-field"
-                      name="perstext_2"
-                      placeholder="я знаю, что такое любовь, благодаря тебе"
-                      value
-                      autocomplete="off"
-                      type="text"
-                    />
-                    <!-- <div class="art-input-maxsize">41</div> -->
-                  </div>
+                <div class="art-field-value">
+                  <input
+                    v-model="previewData.mainText"
+                    id="pers_input1"
+                    maxlength="40"
+                    class="art-order-field"
+                    name="perstext_1"
+                    placeholder="В этот день звезды решили за нас"
+                    value
+                    autocomplete="off"
+                    type="text"
+                  />
+                  <!-- <div class="art-input-maxsize">36</div> -->
                 </div>
-                <div class="art-pers-field">
-                  <div class="art-field-name">
-                    <label for="pers_input3">Впишите ваш текст</label>:
-                  </div>
-                  <div class="art-field-value">
-                    <input
-                      v-model="control.place"
-                      id="pers_input3"
-                      maxlength="20"
-                      class="art-order-field"
-                      name="perstext_3"
-                      placeholder="Россия, Москва"
-                      autocomplete="off"
-                      type="text"
-                    />
-                    <!-- <div class="art-input-maxsize">16</div> -->
-                  </div>
+              </div>
+              <div class="art-pers-field">
+                <div class="art-field-name">
+                  <label for="pers_input2">Впишите ваше пожелание</label>:
+                </div>
+                <div class="art-field-value">
+                  <input
+                    v-model="previewData.secondaryText"
+                    id="pers_input2"
+                    maxlength="45"
+                    class="art-order-field"
+                    name="perstext_2"
+                    placeholder="я знаю, что такое любовь, благодаря тебе"
+                    value
+                    autocomplete="off"
+                    type="text"
+                  />
+                  <!-- <div class="art-input-maxsize">41</div> -->
+                </div>
+              </div>
+              <div class="art-pers-field">
+                <div class="art-field-name">
+                  <label for="pers_input3">Впишите место</label>:
+                </div>
+                <div class="art-field-value">
+                  <input
+                    v-model="previewData.placeText"
+                    id="pers_input3"
+                    maxlength="20"
+                    class="art-order-field"
+                    name="perstext_3"
+                    placeholder="Россия, Москва"
+                    autocomplete="off"
+                    type="text"
+                  />
+                  <!-- <div class="art-input-maxsize">16</div> -->
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="artsk-info">Срок доставки данного товара больше на 3-4 рабочих дня.</div>
-      <div>
-        <button class="product-generate_btn" @click="sendData">Создать карту</button>
-        <button class="js-btn_add product-page_in-cart_notactive">
-          <span></span>
-          <p>В корзину</p>
-        </button>
-      </div>
+    <div class="artsk-info">Срок доставки данного товара больше на 3-4 рабочих дня.</div>
+    <div>
+      <button class="product-generate_btn" @click="sendData">Создать карту</button>
+      <button class="js-btn_add product-page_in-cart_notactive">
+        <span></span>
+        <p>В корзину</p>
+      </button>
     </div>
   </div>
 </template>
@@ -150,8 +136,6 @@ import Autocomplete from "vuejs-auto-complete";
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 
-import Preview from "./Preview";
-
 import AjaxService from "../services/AjaxService";
 import Apiservice from "../services/ApiService";
 
@@ -160,78 +144,78 @@ export default {
   components: {
     Autocomplete,
     vSelect,
-    Preview
   },
 
-  props: ["previewData"],
+  props: [
+    "apiData",
+    "previewData",
+    "printSizes"
+  ],
 
   data: function() {
     return {
-      options: [],
 
       address: "",
       place_name: "",
       place: "",
-      size: "",
+
       image: "",
       design: "",
       shape: "",
 
-      styles: null,
-
-      control: {
-        location: null,
-        hideDate: false,
-        //date: '',
-        place: "Россия, Москва",
-        main_text: "В этот день звезды решили за нас",
-        secondary_text: "я знаю, что такое любовь, благодаря тебе",
-      }
+      styles: null
     };
   },
 
   mounted() {
-    this.styles = Apiservice.getStyles()
-    this.apiBorders = Apiservice.getBorders()
-    this.apiSizes = Apiservice.getSizes()
-    this.prices = Apiservice.getPrices()
-
+    this.styles = this.apiData.styles
     this.design = this.styles[0]
-
-    //this.control.date =
-
-    const sizesMap = this.prices.map(({ size, border, price }) => {
-      const sizeName = this.sizes[size]["name"];
-      const name = `${sizeName} + ${
-        this.borders[border]["name"]
-      } рамка - ${price}`;
-      return {
-        name,
-        size: sizeName
-      };
-    });
-    this.options = sizesMap;
-    this.size = sizesMap[0];
   },
 
   computed: {
-    borders() {
-      return this.getParamsById(this.apiBorders);
+
+  },
+
+  watch: {
+    'previewData.printSize': function (newVal, oldVal) {
+      this.$emit('printSizeChanged', newVal);
     },
-    sizes() {
-      return this.getParamsById(this.apiSizes);
-    }
+    'previewData.hideDate': function(newVal, oldVal) {
+      this.$emit('hideDateChanged', newVal);
+    },
+    'previewData.placeText': function(newVal, oldVal) {
+      this.$emit('placeTextChanged', newVal);
+    },
+    'previewData.mainText': function(newVal, oldVal) {
+      this.$emit('mainTextChanged', newVal);
+    },
+    'previewData.secondaryText': function(newVal, oldVal) {
+      this.$emit('secondaryTextChanged', newVal);
+    },
   },
 
   methods: {
-
-    getParamsById(paramsArray) {
-      const params = {};
-      paramsArray.forEach(param => {
-        params[param.id] = param;
-      });
-      return params;
+    setDesign(value) {
+      this.$emit('designChanged', value);
     },
+
+    setDistributionGroup({ selectedObject: { place_name, center, ...rest } }) {
+      this.place_name = place_name;
+      this.address = center;
+      this.place = rest.text
+
+      let location = [this.address[0], this.address[1]];
+      this.$emit('locationChanged', location);
+    },
+
+/*
+      @designChanged="updateDesign"
+      @locationChanged="updateLocation"
+      @hideDateChanged="updatehideDate"
+      @placeTextChanged="updatePlaceString"
+      @mainTextChanged="updateMainText"
+      @secondaryTextChanged="updateSecondaryText"
+*/
 
     endpoint(input) {
       return (
@@ -243,14 +227,6 @@ export default {
 
     formattedDisplay(result) {
       return result.place_name;
-    },
-
-    addDistributionGroup({ selectedObject: { place_name, center, ...rest } }) {
-      this.place_name = place_name;
-      this.address = center;
-      this.place = rest.text
-
-      this.control.location = [this.address[0], this.address[1]];
     },
 
     getAddressData(addressData, placeResultData, id) {
