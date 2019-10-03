@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div id="preview" :class="previewClass" ref="prev">
+    <div id="preview" :class="previewClass"  :style="{'background-image': `url(${preview.design.sprite})`}" ref="prev">
       <div id="celestial-map" ref="wrapper">
         <!--<div class="" height="600">
            <SkyShape
