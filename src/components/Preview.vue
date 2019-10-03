@@ -1,7 +1,15 @@
 <template>
   <div class="container">
     <div id="preview" :class="previewClass" ref="prev">
-      <div id="celestial-map" ref="wrapper"></div>
+      <div id="celestial-map" ref="wrapper">
+        <!--<div class="" height="600">
+           <SkyShape
+            :theme="totalClass"
+            :shape="stencilShape"
+            :image="skyImage"
+          />
+        </div>-->
+      </div>
       <img :src="image" class="preview-img" />
 
       <div class="map-container2" id="stencil" v-html="stencil"></div>
@@ -29,6 +37,7 @@ let Celestial = require("../libs/celestial.js")
 // let geo = require('d3-celestial/lib/d3.geo.projection')
 
 import ControlPanel from "./ControlPanel"
+import SkyShape from "./SkyShape"
 import ParamsMixin from "../mixins/ParamsMixin"
 
 import ApiService from "../services/ApiService"
@@ -36,7 +45,8 @@ import ApiService from "../services/ApiService"
 export default {
   name: "Preview",
   components: {
-    ControlPanel
+    ControlPanel,
+    SkyShape
   },
   mixins: [ParamsMixin],
   props: [
@@ -48,7 +58,7 @@ export default {
       image: "",
       printSizes: [],
       wasSet: false,
-      svgStencil: '',
+      shape: null,
 
       preview: {
         design: null,
@@ -160,26 +170,10 @@ export default {
     'preview.hideDate': function (newVal, oldVal){
       let line = newVal ? '' : this.preview.date
       this.updateTextNode("date_string", line)
-    },
-
-    /*stencil (newStencil, oldStencil){
-
-      let line = this.preview.hideDate ? '' : this.preview.date
-      this.updateTextNode("date_string", line)
-
-      this.updateTextNode("place_string", this.preview.placeText)
-      this.updateTextNode("main_text_string", this.preview.mainText)
-      this.updateTextNode("secondary_text_string", this.preview.secondaryText)
-
-      this.$forceUpdate()
-    }*/
+    }
   },
 
   computed: {
-    parsedSvgStencil() {
-      return this.svgStencil ? parse(this.svgStencil) : null
-    },
-
     sizeClass() {
       switch (this.preview.printSize.size) {
         case "A2":
@@ -209,6 +203,11 @@ export default {
     stencil() {
       let styles = ApiService.getStyles();
       return !this.wasSet ? styles[0].stencil : this.preview.design.stencil;
+    },
+
+    stencilShape() {
+      const doc = new DOMParser().parseFromString(this.stencil, "text/html")
+      return doc.getElementById("figure").outerHTML
     }
   },
 
@@ -250,8 +249,7 @@ export default {
 
     setBounds() {
       const prevRec = this.$refs.prev.getBoundingClientRect();
-      const shape = document.getElementById("figure");
-      // console.log(shape);
+      const shape = document.getElementById("figure")
 
       const rec = shape.getBoundingClientRect();
       const cx = shape.getAttribute("cx");
