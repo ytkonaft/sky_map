@@ -6,8 +6,17 @@
       <div class="product-page_variants_block other">
         <div class="name design">Выберите дизайн</div>
         <div class="input_wrap">
-          <label v-for="(style, idx) in styles" :key="style.id" :title="style.name">
-            <input type="radio" name="color" :value="idx" :checked="(style.id=design.id)" @click="setDesign(style)" v-model="design" />
+          <label v-for="style in styles" :key="style.name" :title="style.name">
+            <!-- /////////////// WTF here ??????????????? -->
+            <input
+              type="radio"
+              name="color"
+              :value="style.id"
+              :checked="style.id===design.id"
+              @click="setDesign(style)"
+              v-model="design"
+            />
+            <!-- /////////////// -->
             <span>
               <img :src="style.picture" alt />
             </span>
@@ -143,18 +152,13 @@ export default {
   name: "ControlPanel",
   components: {
     Autocomplete,
-    vSelect,
+    vSelect
   },
 
-  props: [
-    "apiData",
-    "previewData",
-    "printSizes"
-  ],
+  props: ["apiData", "previewData", "printSizes"],
 
   data: function() {
     return {
-
       address: "",
       place_name: "",
       place: "",
@@ -162,50 +166,47 @@ export default {
       image: "",
       design: "",
       shape: "",
-
       styles: null
     };
   },
 
   mounted() {
-    this.styles = this.apiData.styles
-    this.design = this.styles[0]
+    this.styles = this.apiData.styles;
+    this.design = this.styles[0];
   },
 
-  computed: {
-
-  },
+  computed: {},
 
   watch: {
-    'previewData.printSize': function (newVal, oldVal) {
-      this.$emit('printSizeChanged', newVal);
+    "previewData.printSize": function(newVal, oldVal) {
+      this.$emit("printSizeChanged", newVal);
     },
-    'previewData.hideDate': function(newVal, oldVal) {
-      this.$emit('hideDateChanged', newVal);
+    "previewData.hideDate": function(newVal, oldVal) {
+      this.$emit("hideDateChanged", newVal);
     },
-    'previewData.placeText': function(newVal, oldVal) {
-      this.$emit('placeTextChanged', newVal);
+    "previewData.placeText": function(newVal, oldVal) {
+      this.$emit("placeTextChanged", newVal);
     },
-    'previewData.mainText': function(newVal, oldVal) {
-      this.$emit('mainTextChanged', newVal);
+    "previewData.mainText": function(newVal, oldVal) {
+      this.$emit("mainTextChanged", newVal);
     },
-    'previewData.secondaryText': function(newVal, oldVal) {
-      this.$emit('secondaryTextChanged', newVal);
-    },
+    "previewData.secondaryText": function(newVal, oldVal) {
+      this.$emit("secondaryTextChanged", newVal);
+    }
   },
 
   methods: {
     setDesign(value) {
-      this.$emit('designChanged', value);
+      this.$emit("designChanged", value);
     },
 
     setDistributionGroup({ selectedObject: { place_name, center, ...rest } }) {
       this.place_name = place_name;
       this.address = center;
-      this.place = rest.text
+      this.place = rest.text;
 
       let location = [this.address[0], this.address[1]];
-      this.$emit('locationChanged', location);
+      this.$emit("locationChanged", location);
     },
 
     endpoint(input) {
