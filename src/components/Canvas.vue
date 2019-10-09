@@ -128,7 +128,7 @@ export default {
   },
   updated() {
     this.setBounds();
-    this.textNodesUpdate(true);
+    this.textNodesUpdate();
   },
   mounted() {
     this.drawSky();
@@ -193,7 +193,6 @@ export default {
     textNodesUpdate(onlyPlace) {
       this.textMap.forEach(({ id, props }) => {
         this.textNodesToStandart(id);
-        if (onlyPlace) return;
         this.setText(id, this[props]);
       });
     },
