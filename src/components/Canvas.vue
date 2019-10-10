@@ -12,7 +12,7 @@ import SkyShape from "./SkyShape";
 import Celestial from "../libs/celestial";
 import ParamsMixin from "../mixins/ParamsMixin";
 
-import ApiService from "../services/ApiService";
+import SkyApiService from "../services/SkyApiService";
 
 export default {
   name: "sky-canvas",
@@ -115,7 +115,8 @@ export default {
       this.setText("secondary_text_string", newVal);
     },
     center(newVal) {
-      this.setText(newVal);
+      this.rotateSky(newVal);
+      //this.setText(newVal);
     },
     date(newVal, oldVal) {
       let line = this.hideDate ? "" : this.date;
@@ -135,6 +136,7 @@ export default {
     this.setBounds();
     this.textNodesUpdate();
   },
+
   computed: {
     viewBoxArr() {
       const swgWrp = this.$refs.svgwrap;
@@ -172,7 +174,7 @@ export default {
     },
 
     stencil() {
-      let styles = ApiService.getStyles();
+      let styles = SkyApiService.getStyles();
       return !this.wasSet ? styles[0].stencil : this.design.stencil;
     },
 
@@ -223,19 +225,6 @@ export default {
       this.$refs.wrapper.style.left = `${rec.left - prevRec.left}px`;
       this.$refs.wrapper.style.width = `${rec.width}px`;
     },
-
-    // loadSVG() {
-    //   console.log(window.Celestial.container.selectAll());
-
-    //   if (this.address !== "") {
-    //     this.config.geopos = this.address;
-    //     window.Celestial.apply(this.config);
-    //   }
-
-    //   var image = window.Celestial.context.canvas.toDataURL("image/png");
-    //   // console.log(image);
-    //   this.image = image;
-    // },
 
     rotateSky(location) {
       window.Celestial.rotate({ center: [location[0], location[1], 0] });

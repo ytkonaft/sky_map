@@ -1,18 +1,10 @@
 import testData from '../assets/download'
 import AjaxService from './AjaxService'
 
-class ApiService {
-  constructor () {
-    /*AjaxService.makeGetRequest('get')
-      .then(response => {
-        console.log(response.data)
-        if (response.data.success === 'true') {
-        }
-      })
-      .catch(error => {
-        console.log(error)
-      })*/
+class SkyApiService extends AjaxService {
 
+  constructor () {
+    super()
     this.data = testData.data
   }
 
@@ -35,6 +27,13 @@ class ApiService {
   getSizes () {
     return this.data.sizes
   }
+
+  generate(formData, headers={}) {
+    return this.postRequest(`generator/starmap`, formData, headers)
+    .then(response => {
+        return response
+    })
+  }
 }
 
-export default new ApiService()
+export default new SkyApiService()

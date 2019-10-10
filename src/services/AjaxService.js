@@ -5,7 +5,7 @@ class AjaxService {
   constructor () {
     // this.siteUrl = process.env.VUE_APP_API_URL
     this.siteUrl = process.env.VUE_GET_API
-    this.apiVersion = 'api/sky/'
+    this.apiVersion = 'api/'
 
     this.apiOptions = testData.data
   }
@@ -14,7 +14,7 @@ class AjaxService {
     return `${this.siteUrl}/${this.apiVersion}`
   }
 
-  makeGetRequest (url, data = null, headers = null) {
+  getRequest (url, data = null, headers = null) {
     let params = {
       params: data
     }
@@ -23,7 +23,7 @@ class AjaxService {
     return this._makeRequest(url, params)
   }
 
-  makePostRequest (url, data, headers = null) {
+  postRequest (url, data, headers = null) {
     return this._postDataRequest(url, 'POST', data, headers)
   }
 
@@ -49,4 +49,4 @@ class AjaxService {
   }
 }
 
-export default new AjaxService()
+export default AjaxService

@@ -131,7 +131,7 @@
 
     <div class="artsk-info">Срок доставки данного товара больше на 3-4 рабочих дня.</div>
     <div>
-      <button class="product-generate_btn" @click="sendData">Создать карту</button>
+      <button class="product-generate_btn" @click="submitForm">Создать карту</button>
       <button class="js-btn_add product-page_in-cart_notactive">
         <span></span>
         <p>В корзину</p>
@@ -144,9 +144,6 @@ import Autocomplete from "vuejs-auto-complete";
 // import Datepicker from 'vuejs-datepicker'
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
-
-import AjaxService from "../services/AjaxService";
-import Apiservice from "../services/ApiService";
 
 export default {
   name: "ControlPanel",
@@ -205,8 +202,12 @@ export default {
       this.address = center;
       this.place = rest.text;
 
-      let location = [this.address[0], this.address[1]];
-      this.$emit("locationChanged", location);
+      this.$emit("placenameChanged", this.place_name);
+      this.$emit("locationChanged", [this.address[0], this.address[1]]);
+    },
+
+    submitForm() {
+      this.$emit("formSubmitted");
     },
 
     endpoint(input) {
@@ -223,65 +224,6 @@ export default {
 
     getAddressData(addressData, placeResultData, id) {
       this.address = addressData;
-    },
-
-    b64toBlob(b64Data, contentType, sliceSize) {
-      contentType = contentType || "";
-      sliceSize = sliceSize || 512;
-
-      const byteCharacters = atob(b64Data);
-      let byteArrays = [];
-
-      for (
-        var offset = 0;
-        offset < byteCharacters.length;
-        offset += sliceSize
-      ) {
-        var slice = byteCharacters.slice(offset, offset + sliceSize);
-
-        var byteNumbers = new Array(slice.length);
-        for (var i = 0; i < slice.length; i++) {
-          byteNumbers[i] = slice.charCodeAt(i);
-        }
-
-        var byteArray = new Uint8Array(byteNumbers);
-
-        byteArrays.push(byteArray);
-      }
-
-      return new Blob(byteArrays, { type: contentType });
-    },
-
-    sendData() {
-      console.log("sending axios");
-      const ImageURL = window.Celestial.context.canvas.toDataURL("image/png");
-
-      const block = ImageURL.split(";");
-      const contentType = block[0].split(":")[1];
-      const realData = block[1].split(",")[1];
-
-      const blob = this.b64toBlob(realData, contentType);
-
-      /*const formData = new FormData();
-      formData.append("design", this.design);
-      formData.append("place_name", this.place_name);
-      formData.append("date", this.datetime);
-      formData.append("size", this.size);
-      formData.append("text1", this.text1);
-      formData.append("text2", this.text2);
-      formData.append("text3", this.text3);
-      formData.append("img", blob);
-
-      const headers = {
-        "Content-Type": "multipart/form-data"
-      };
-      AjaxService.makePostRequest(`starmap`, formData, headers)
-        .then(response => {
-          console.log(response);
-        })
-        .catch(error => {
-          console.log(error);
-        });*/
     }
   }
 };

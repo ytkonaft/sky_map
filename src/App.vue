@@ -7,7 +7,7 @@
 <script>
 import Preview from "./components/Preview";
 
-import ApiService from "./services/ApiService";
+import SkyApiService from "./services/SkyApiService";
 
 export default {
   name: "App",
@@ -22,7 +22,7 @@ export default {
   },
 
   created() {
-    this.apiData = ApiService.getData();
+    this.apiData = SkyApiService.getData();
   }
 };
 </script>
