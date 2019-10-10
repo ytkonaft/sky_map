@@ -29,7 +29,8 @@ export default {
     "printSize",
     "wasSet",
     "hideDate",
-    "center"
+    "center",
+    "textMap"
   ],
 
   data() {
@@ -39,12 +40,7 @@ export default {
       preview: {
         location: null
       },
-      textMap: [
-        { id: "place_string", props: "placeText" },
-        { id: "main_text_string", props: "mainText" },
-        { id: "secondary_text_string", props: "secondaryText" },
-        { id: "date_string", props: "date" }
-      ],
+
       config: {
         width: 3000,
         location: true,

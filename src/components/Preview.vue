@@ -9,6 +9,7 @@
       :design="preview.design"
       :wasSet="wasSet"
       :center="center"
+      :textMap="textMap"
       :hideDate="preview.hideDate"
       @setDate="updateDate"
     />
@@ -24,8 +25,8 @@
       @placeTextChanged="updatePlaceText"
       @mainTextChanged="updateMainText"
       @secondaryTextChanged="updateSecondaryText"
-      @formSubmitted="sendData"
-      @createImg="createImg"
+      @formSubmitted="submitedForm"
+      :uploading="fetching"
     />
   </div>
 </template>
@@ -48,10 +49,17 @@ export default {
 
   data: function() {
     return {
+      fetching: false,
       printSizes: [],
       wasSet: false,
       shape: null,
       center: [-150, 0],
+      textMap: [
+        { id: "place_string", props: "placeText" },
+        { id: "main_text_string", props: "mainText" },
+        { id: "secondary_text_string", props: "secondaryText" },
+        { id: "date_string", props: "date" }
+      ],
       preview: {
         design: null,
         printSize: null,
@@ -103,17 +111,34 @@ export default {
     updateSecondaryText(value) {
       this.preview.secondaryText = value;
     },
-
-    sendData() {
-      let formData = new FormData(),
-        imageURL = this.getImageRealData();
-
-      formData.append("stars", imageURL);
-      formData.append("preview", JSON.stringify(this.preview));
-
-      SkyApiService.generate(formData).then(response => {
-        console.log(response);
+    getTextData() {
+      const accum = {};
+      this.textMap.forEach(({ id, props }) => {
+        const node = document.getElementById(id);
+        accum[id] = {
+          id: id,
+          text: this.preview[props],
+          x: node.getAttribute("x")
+        };
       });
+      return accum;
+    },
+    submitedForm() {
+      this.fetching = true;
+      this.sendData();
+    },
+    async sendData() {
+      const textData = this.getTextData();
+      const image = await this.createImg();
+      console.log(textData);
+      console.log(image);
+      this.fetching = false;
+      // formData.append("stars", imageURL);
+      // formData.append("preview", JSON.stringify(this.preview));
+
+      // SkyApiService.generate(formData).then(response => {
+      //   console.log(response);
+      // });
     },
 
     getImageRealData() {
@@ -124,19 +149,19 @@ export default {
 
       return realData;
     },
-    createImg() {
+    async createImg() {
       const node = document.querySelector("#celestial-map canvas");
 
-      domtoimage
-        .toBlob(node, {
-          width: 3000,
-          height: 3000
-        })
-        .then(blob => {
-          const objectURL = URL.createObjectURL(blob);
-          console.log(objectURL);
-          window.open(objectURL, "_newtab");
-        });
+      const blob = await domtoimage.toBlob(node, {
+        width: 3000,
+        height: 3000
+      });
+      const objectURL = URL.createObjectURL(blob);
+
+      return {
+        objectURL,
+        blob
+      };
     },
     b64toBlob(b64Data, contentType, sliceSize) {
       contentType = contentType || "";

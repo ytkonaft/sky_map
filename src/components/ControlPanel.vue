@@ -131,8 +131,7 @@
 
     <div class="artsk-info">Срок доставки данного товара больше на 3-4 рабочих дня.</div>
     <div>
-      <button class="product-generate_btn" @click="createImg">IMG</button>
-      <button class="product-generate_btn" @click="submitForm">Создать карту</button>
+      <button class="product-generate_btn" @click="submitForm" :disabled="!!uploading">Создать карту</button>
       <button class="js-btn_add product-page_in-cart_notactive">
         <span></span>
         <p>В корзину</p>
@@ -153,7 +152,7 @@ export default {
     vSelect
   },
 
-  props: ["apiData", "previewData", "printSizes"],
+  props: ["apiData", "previewData", "printSizes", "uploading"],
 
   data: function() {
     return {
@@ -194,9 +193,6 @@ export default {
   },
 
   methods: {
-    createImg() {
-      this.$emit("createImg");
-    },
     setDesign(value) {
       this.$emit("designChanged", value);
     },
@@ -410,6 +406,9 @@ export default {
   border-color: #29b4ad;
   color: #fff;
   margin-right: 20px;
+}
+.product-generate_btn:disabled {
+  opacity: 0.3;
 }
 .product-page_in-cart_notactive {
   background: #fff;
