@@ -32,7 +32,6 @@
 <script>
 import Canvas from "./Canvas";
 import ControlPanel from "./ControlPanel";
-// import SkyShape from "./SkyShape";
 import ParamsMixin from "../mixins/ParamsMixin";
 
 import SkyApiService from "../services/SkyApiService";
