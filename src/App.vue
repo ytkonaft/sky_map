@@ -78,12 +78,13 @@ canvas {
   background: #f0f4fb;
 }
 
-.container {
+.container-wrp {
   display: flex;
   flex-direction: row;
   // align-items: center;
   justify-content: space-between;
   max-width: 1140px;
+  align-items: center;
   position: relative;
   width: 100%;
   margin-right: auto;

@@ -1,9 +1,11 @@
 <template>
-  <div id="preview" :class="previewClass" ref="prev">
-    <div id="celestial-map" ref="wrapper" />
-    <!-- <img :src="image" class="preview-img" /> -->
-    <div id="stencil" v-html="stencil" ref="svgwrap"></div>
-    <img v-if="design && design.sprite" :src="design.sprite" class="sprite" />
+  <div class="preview-wrp">
+    <div id="preview" :class="previewClass" ref="prev">
+      <div id="celestial-map" ref="wrapper" />
+      <!-- <img :src="image" class="preview-img" /> -->
+      <div id="stencil" v-html="stencil" ref="svgwrap"></div>
+      <img v-if="design && design.sprite" :src="design.sprite" class="sprite" />
+    </div>
   </div>
 </template>
 
@@ -34,10 +36,7 @@ export default {
     return {
       image: "",
       shape: null,
-
       preview: {
-        printSize: null,
-
         location: null
       },
       textMap: [
@@ -125,6 +124,10 @@ export default {
     hideDate(newVal, oldVal) {
       let line = newVal ? "" : this.date;
       this.setText("date_string", line);
+    },
+    sizeClass(newVal, oldVal) {
+      this.setBounds();
+      this.textNodesUpdate();
     }
   },
   updated() {
@@ -275,7 +278,8 @@ export default {
 
 <style lang="scss">
 .a3-print-size {
-  transform: scale(0.8);
+  // transform: scale(0.8);
+  width: 80% !important;
 }
 #preview {
   position: relative;
@@ -329,23 +333,26 @@ export default {
     display: none;
   }
 }
-
+.preview-wrp {
+  height: 100%;
+  display: flex;
+  width: 49%;
+  justify-content: center;
+  align-items: middle;
+}
 #preview {
   // background-color: #333;
   overflow: hidden;
-  height: 100%;
   display: flex;
-  justify-content: center;
-  align-items: top;
+  width: 100%;
   background-repeat: no-repeat;
-  width: 49%;
   flex-direction: column;
-  #celestial-map {
+  #celestial-map canvas {
     background: linear-gradient(120deg, #000 0%, #000 100%);
   }
   &.rose {
     background: #fff;
-    #celestial-map {
+    #celestial-map canvas {
       background: linear-gradient(
         120deg,
         rgba(56, 16, 116, 1) 0%,

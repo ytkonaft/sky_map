@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container-wrp">
     <Canvas
       :placeText="preview.placeText"
       :mainText="preview.mainText"
@@ -25,6 +25,7 @@
       @mainTextChanged="updateMainText"
       @secondaryTextChanged="updateSecondaryText"
       @formSubmitted="sendData"
+      @createImg="createImg"
     />
   </div>
 </template>
@@ -32,10 +33,9 @@
 <script>
 import Canvas from "./Canvas";
 import ControlPanel from "./ControlPanel";
-// import SkyShape from "./SkyShape";
 import ParamsMixin from "../mixins/ParamsMixin";
-
 import SkyApiService from "../services/SkyApiService";
+import domtoimage from "dom-to-image";
 
 export default {
   name: "Preview",
@@ -104,28 +104,40 @@ export default {
       this.preview.secondaryText = value;
     },
 
-
     sendData() {
       let formData = new FormData(),
-        imageURL = this.getImageRealData()
+        imageURL = this.getImageRealData();
 
-      formData.append("stars", imageURL)
-      formData.append("preview", JSON.stringify(this.preview))
+      formData.append("stars", imageURL);
+      formData.append("preview", JSON.stringify(this.preview));
 
       SkyApiService.generate(formData).then(response => {
-        console.log(response)
+        console.log(response);
       });
     },
 
     getImageRealData() {
-      const imageURL = window.Celestial.context.canvas.toDataURL("image/png")
-      const block = imageURL.split(";")
-      const contentType = block[0].split(":")[1]
-      const realData = block[1].split(",")[1]
+      const imageURL = window.Celestial.context.canvas.toDataURL("image/png");
+      const block = imageURL.split(";");
+      const contentType = block[0].split(":")[1];
+      const realData = block[1].split(",")[1];
 
-      return realData
+      return realData;
     },
+    createImg() {
+      const node = document.querySelector("#celestial-map canvas");
 
+      domtoimage
+        .toBlob(node, {
+          width: 3000,
+          height: 3000
+        })
+        .then(blob => {
+          const objectURL = URL.createObjectURL(blob);
+          console.log(objectURL);
+          window.open(objectURL, "_newtab");
+        });
+    },
     b64toBlob(b64Data, contentType, sliceSize) {
       contentType = contentType || "";
       sliceSize = sliceSize || 512;
@@ -152,8 +164,6 @@ export default {
 
       return new Blob(byteArrays, { type: contentType });
     }
-
-
   }
 };
 </script>
