@@ -349,7 +349,6 @@ export default {
     background: linear-gradient(120deg, #000 0%, #000 100%);
   }
   &.rose {
-    background: #fff;
     #celestial-map canvas {
       background: linear-gradient(
         120deg,
