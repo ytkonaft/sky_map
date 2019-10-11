@@ -228,8 +228,8 @@ export default {
     },
 
     formattedDisplay(city) {
-      console.log(city)
-      return city.place_name;
+      //return city.place_name
+      return `${city.text_ru}, ${city.context[1].text_ru}`
     },
 
     getAddressData(addressData, placeResultData, id) {

@@ -20,9 +20,9 @@ viewBox="0 0 841.89 1190.55" style="enable-background:new 0 0 841.89 1190.55;" x
          .st7{font-family:'CenturySchlbkCyrillicBT-Bold';}
          .st8{font-size:33px;}
        </style>
-     
+
        <rect x="23.48" y="19.2" class="st1" width="797.84" height="1151.52"/>
-       <circle id="figure" class="st2" cx="420.98" cy="462.93" r="321.43"/>
+       <circle id="figure" class="st2" cx="420.98" cy="462.93" r="321.43" />
        <text transform="matrix(1 0 0 1 402.7535 1114.1582)" class="st3 st4" id="date_string" text-anchor="middle">date</text>
        <text transform="matrix(1 0 0 1 399.801 1136.4147)" class="st3 st4" id="place_string" text-anchor="middle">place</text>
        <g>

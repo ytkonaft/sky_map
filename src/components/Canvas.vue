@@ -64,7 +64,7 @@ export default {
           names: false,
           style: { fill: "#fff", opacity: 1 },
           limit: 50,
-          size: 35
+          size: 30
         },
         constellations: {
           show: true,
@@ -75,7 +75,7 @@ export default {
             baseline: "middle",
             opacity: 1
           },
-          linestyle: { stroke: "#fff", width: 6, opacity: 1 }
+          linestyle: { stroke: "#fff", width: 6, opacity: 0.5 }
         },
         dsos: { show: false },
         mw: {
@@ -188,7 +188,7 @@ export default {
   methods: {
     setText(id, newVal) {
       const node = document.getElementById(id);
-      console.log(node.innerHTML, newVal);
+
       if (node.innerHTML === newVal) return;
       node.innerHTML = newVal;
     },

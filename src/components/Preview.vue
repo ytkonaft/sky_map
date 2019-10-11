@@ -25,7 +25,7 @@
       @placeTextChanged="updatePlaceText"
       @mainTextChanged="updateMainText"
       @secondaryTextChanged="updateSecondaryText"
-      @formSubmitted="submitedForm"
+      @formSubmitted="submitForm"
       :uploading="fetching"
     />
   </div>
@@ -54,12 +54,14 @@ export default {
       wasSet: false,
       shape: null,
       center: [-150, 0],
+
       textMap: [
         { id: "place_string", props: "placeText" },
         { id: "main_text_string", props: "mainText" },
         { id: "secondary_text_string", props: "secondaryText" },
         { id: "date_string", props: "date" }
       ],
+
       preview: {
         design: null,
         printSize: null,
@@ -118,76 +120,52 @@ export default {
         accum[id] = {
           id: id,
           text: this.preview[props],
-          x: node.getAttribute("x")
+          x: node.getAttribute("x"),
+          y: node.getAttribute("y"),
         };
       });
       return accum;
     },
-    submitedForm() {
+
+    submitForm() {
       this.fetching = true;
       this.sendData();
     },
+
     async sendData() {
       const textData = this.getTextData();
-      const image = await this.createImg();
-      console.log(textData);
-      console.log(image);
-      this.fetching = false;
-      // formData.append("stars", imageURL);
-      // formData.append("preview", JSON.stringify(this.preview));
+      const stars = await this.createImg();
+      const starsData = this.getImageRealData(stars);
 
-      // SkyApiService.generate(formData).then(response => {
-      //   console.log(response);
-      // });
+      this.fetching = false;
+
+      let formData = new FormData();
+      formData.append("stars", starsData);
+      formData.append("text_data", JSON.stringify(textData));
+      formData.append("preview", JSON.stringify(this.preview));
+
+      SkyApiService.generate(formData).then(response => {
+         console.log(response);
+      });
     },
 
-    getImageRealData() {
-      const imageURL = window.Celestial.context.canvas.toDataURL("image/png");
+    getImageRealData(imageURL) {
       const block = imageURL.split(";");
       const contentType = block[0].split(":")[1];
       const realData = block[1].split(",")[1];
 
       return realData;
     },
+
     async createImg() {
       const node = document.querySelector("#celestial-map canvas");
 
-      const blob = await domtoimage.toBlob(node, {
+      return await domtoimage.toPng(node, {
         width: 3000,
         height: 3000
-      });
-      const objectURL = URL.createObjectURL(blob);
-
-      return {
-        objectURL,
-        blob
-      };
-    },
-    b64toBlob(b64Data, contentType, sliceSize) {
-      contentType = contentType || "";
-      sliceSize = sliceSize || 512;
-
-      const byteCharacters = atob(b64Data);
-      let byteArrays = [];
-
-      for (
-        var offset = 0;
-        offset < byteCharacters.length;
-        offset += sliceSize
-      ) {
-        var slice = byteCharacters.slice(offset, offset + sliceSize);
-
-        var byteNumbers = new Array(slice.length);
-        for (var i = 0; i < slice.length; i++) {
-          byteNumbers[i] = slice.charCodeAt(i);
-        }
-
-        var byteArray = new Uint8Array(byteNumbers);
-
-        byteArrays.push(byteArray);
-      }
-
-      return new Blob(byteArrays, { type: contentType });
+      }).then(function(dataUrl) {
+        return dataUrl;
+      })
     }
   }
 };
