@@ -30,9 +30,9 @@
         <div class="name" style="margin-bottom: 15px;">Выберите ваш город</div>
         <autocomplete
           placeholder="Введите ваш город"
-          :source="endpoint"
+          :source="getLocations"
           results-property="features"
-          results-diplay="place_name"
+          :results-formatter="formattedResult"
           :results-display="formattedDisplay"
           @selected="setDistributionGroup"
         ></autocomplete>
@@ -145,6 +145,8 @@ import Autocomplete from "vuejs-auto-complete";
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 
+import MapboxService from '../services/MapboxService'
+
 export default {
   name: "ControlPanel",
   components: {
@@ -210,16 +212,24 @@ export default {
       this.$emit("formSubmitted");
     },
 
-    endpoint(input) {
-      return (
-        "https://api.mapbox.com/geocoding/v5/mapbox.places/" +
-        input +
-        ".json?types=place&language=ru&access_token=pk.eyJ1IjoibWFrc2ltOTg5IiwiYSI6ImNqeDY0OXZrbzA4Nnk0ZHF1bG9ybmxvNGsifQ.-OcDOS1w1vyn8poaNOtsDg"
-      );
+    getLocations(input) {
+      return MapboxService.collectUrl(input);
     },
 
-    formattedDisplay(result) {
-      return result.place_name;
+    formattedResult(data) {
+      let cities = []
+      data.features.forEach(function(item) {
+        if (JSON.stringify(item.place_type) == JSON.stringify(['place'])) {
+          cities.push(item)
+        }
+      });
+
+      return cities;
+    },
+
+    formattedDisplay(city) {
+      console.log(city)
+      return city.place_name;
     },
 
     getAddressData(addressData, placeResultData, id) {

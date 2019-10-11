@@ -10,7 +10,6 @@
 </template>
 
 <script>
-import SkyShape from "./SkyShape";
 import Celestial from "../libs/celestial";
 import ParamsMixin from "../mixins/ParamsMixin";
 
@@ -65,21 +64,24 @@ export default {
           names: false,
           style: { fill: "#fff", opacity: 1 },
           limit: 50,
-          size: 25
+          size: 35
         },
         constellations: {
           show: true,
           namestyle: {
-            fill: "#aaa",
+            fill: "#fff",
             font: "0 Helvetica, Arial, sans-serif",
             align: "center",
             baseline: "middle",
             opacity: 1
           },
-          linestyle: { stroke: "#999", width: 6, opacity: 1 }
+          linestyle: { stroke: "#fff", width: 6, opacity: 1 }
         },
         dsos: { show: false },
-        mw: { show: false },
+        mw: {
+          show: true,    // Show Milky Way as filled polygons
+          style: { fill: "#ffffff", opacity: "0.1" }
+        },
         lines: {
           graticule: { show: false },
           equatorial: {
